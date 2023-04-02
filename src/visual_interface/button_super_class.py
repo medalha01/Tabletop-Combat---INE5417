@@ -11,7 +11,7 @@ class AppButton:
             text="Virtual Table Top test",
             image=self.buttonImage,
             compound=tk.LEFT,
-            command=self.disableBtn,
+            command=self.createBtn,
         )
 
     def createBtn(self):
