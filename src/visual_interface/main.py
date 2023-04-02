@@ -1,12 +1,16 @@
 import tkinter as tk
-from tkinter import Menu
-from tkinter import grid
+from tkinter import *
 
 
 class VirtualTableTopGUI(tk.Tk):
     def __init__(self):
         super().__init__()
+
         self.title("Virtual Table Top")
+        self.geometry("800x400")
+        self.resizable(True, True)
+        self["bg"] = "blue"
+
         self.setMenu()
         self.setGrid()
 
@@ -33,12 +37,23 @@ class VirtualTableTopGUI(tk.Tk):
         appMenubar.add_cascade(label="Personagem", menu=characterMenu)
 
     def setGrid(self):
+        self.boardView = []
         for i in range(10):
+            viewTier = []
             for j in range(10):
-                frame = tk.Frame(master=self, relief=tk.RAISED, borderwidth=1)
-                frame.grid(row=i, column=j, padx=10, pady=5)
-                label = tk.Label(master=frame, text=f"Row {i}\nColumn {j}")
-                label.pack()
+                aLabel = Label(
+                    self,
+                    bd=1,
+                    relief="solid",
+                    border=1,
+                    width=11,
+                    height=3,
+                    bg="white",
+                )
+                aLabel.grid(row=i, column=j)
+                aLabel.bind("<Button-1>")
+                viewTier.append(aLabel)
+            self.boardView.append(viewTier)
 
 
 appFrame = VirtualTableTopGUI()
