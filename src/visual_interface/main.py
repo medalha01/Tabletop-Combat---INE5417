@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import Menu
-from tkinter import grid
+from tkinter import Grid
 
 
 class VirtualTableTopGUI(tk.Tk):
