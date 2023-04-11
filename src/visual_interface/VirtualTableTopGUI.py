@@ -1,5 +1,8 @@
+
+
 import tkinter as tk
 from tkinter import *
+from CharacterSidebar import CharacterSidebar
 
 
 class VirtualTableTopGUI(tk.Tk):
@@ -8,9 +11,10 @@ class VirtualTableTopGUI(tk.Tk):
 
         self.title("Virtual Table Top")
         self.geometry("800x600")
+
         self.setMenu()
         self.setBar()
-        self.setGrid()
+        self.setGrid(10)
 
     def setMenu(self):
         appMenubar = Menu(self)
@@ -25,7 +29,7 @@ class VirtualTableTopGUI(tk.Tk):
         file_menu.add_command(label="Disconnect", command=self.destroy)
 
         matchMenu.add_command(label="Start Match", command=self.destroy)
-        matchMenu.add_command(label="Load Match", command=self.destroy)
+        matchMenu.add_command(label="Configure Match", command=self.destroy)
 
         characterMenu.add_command(label="Add Character", command=self.destroy)
         characterMenu.add_command(label="Load Character", command=self.destroy)
@@ -36,14 +40,16 @@ class VirtualTableTopGUI(tk.Tk):
 
     def setBar(self):
 
-        sidebar_left = tk.Frame(self, bg="#3B3B3B", width=200)
-        sidebar_left.pack(side="left", fill="y")
+        self._sidebar_char = CharacterSidebar(self)
 
-        sidebar_right = tk.Frame(self, bg="#3B3B3B", width=100)
-        sidebar_right.pack(side="right", fill="y")
+        #sidebar_char = tk.Frame(self, bg="#3B3B3B", width=200)
+        self._sidebar_char.frame.pack(side="left", fill="y")
 
-        self.button1 = tk.Button(
-            sidebar_left,
+        sidebar_init = tk.Frame(self, bg="#3B3B3B", width=100)
+        sidebar_init.pack(side="right", fill="y")
+
+    """         self.button1 = tk.Button(
+            sidebar_char,
             text="Botão 1",
             font=("Helvetica", 14),
             bg="#535353",
@@ -54,7 +60,7 @@ class VirtualTableTopGUI(tk.Tk):
         self.button1.pack(pady=10, padx=20, fill="x")
 
         self.button2 = tk.Button(
-            sidebar_left,
+            sidebar_char,
             text="Botão 2",
             font=("Helvetica", 14),
             bg="#535353",
@@ -65,7 +71,7 @@ class VirtualTableTopGUI(tk.Tk):
         self.button2.pack(pady=10, padx=20, fill="x")
 
         self.button3 = tk.Button(
-            sidebar_left,
+            sidebar_char,
             text="Botão 3",
             font=("Helvetica", 14),
             bg="#535353",
@@ -73,16 +79,16 @@ class VirtualTableTopGUI(tk.Tk):
             relief="flat",
             command=self.on_button3_click,
         )
-        self.button3.pack(pady=10, padx=20, fill="x")
+        self.button3.pack(pady=10, padx=20, fill="x") """
 
-    def setGrid(self):
+    def setGrid(self, size: int):
         grid_frame = tk.Frame(self)
         grid_frame.pack(side="right", fill="both", expand=True)
 
         self.cells = []
-        for i in range(5):
+        for i in range(size):
             row = []
-            for j in range(5):
+            for j in range(size):
                 cell = tk.Label(
                     grid_frame,
                     text=f"{i}, {j}",
@@ -93,7 +99,7 @@ class VirtualTableTopGUI(tk.Tk):
                     width=9,
                     height=4,
                 )
-                cell.grid(row=i, column=j, padx=3, pady=3)
+                cell.grid(row=i, column=j, padx=1, pady=1)
                 row.append(cell)
             self.cells.append(row)
 
