@@ -7,11 +7,9 @@ class VirtualTableTopGUI(tk.Tk):
         super().__init__()
 
         self.title("Virtual Table Top")
-        self.geometry("800x400")
-        self.resizable(True, True)
-        self["bg"] = "blue"
-
+        self.geometry("800x600")
         self.setMenu()
+        self.setBar()
         self.setGrid()
 
     def setMenu(self):
@@ -36,24 +34,91 @@ class VirtualTableTopGUI(tk.Tk):
         appMenubar.add_cascade(label="Match", menu=matchMenu)
         appMenubar.add_cascade(label="Personagem", menu=characterMenu)
 
+    def setBar(self):
+
+        sidebar_left = tk.Frame(self, bg="#3B3B3B", width=200)
+        sidebar_left.pack(side="left", fill="y")
+
+        sidebar_right = tk.Frame(self, bg="#3B3B3B", width=100)
+        sidebar_right.pack(side="right", fill="y")
+
+        self.button1 = tk.Button(
+            sidebar_left,
+            text="Botão 1",
+            font=("Helvetica", 14),
+            bg="#535353",
+            fg="white",
+            relief="flat",
+            command=self.on_button1_click,
+        )
+        self.button1.pack(pady=10, padx=20, fill="x")
+
+        self.button2 = tk.Button(
+            sidebar_left,
+            text="Botão 2",
+            font=("Helvetica", 14),
+            bg="#535353",
+            fg="white",
+            relief="flat",
+            command=self.on_button2_click,
+        )
+        self.button2.pack(pady=10, padx=20, fill="x")
+
+        self.button3 = tk.Button(
+            sidebar_left,
+            text="Botão 3",
+            font=("Helvetica", 14),
+            bg="#535353",
+            fg="white",
+            relief="flat",
+            command=self.on_button3_click,
+        )
+        self.button3.pack(pady=10, padx=20, fill="x")
+
     def setGrid(self):
-        self.boardView = []
-        for i in range(10):
-            viewTier = []
-            for j in range(10):
-                aLabel = Label(
-                    self,
-                    bd=1,
+        grid_frame = tk.Frame(self)
+        grid_frame.pack(side="right", fill="both", expand=True)
+
+        self.cells = []
+        for i in range(5):
+            row = []
+            for j in range(5):
+                cell = tk.Label(
+                    grid_frame,
+                    text=f"{i}, {j}",
+                    font=("Helvetica", 14),
+                    bg="#F7F7F7",
+                    fg="#333",
                     relief="solid",
-                    border=1,
-                    width=11,
-                    height=3,
-                    bg="white",
+                    width=9,
+                    height=4,
                 )
-                aLabel.grid(row=i, column=j)
-                aLabel.bind("<Button-1>")
-                viewTier.append(aLabel)
-            self.boardView.append(viewTier)
+                cell.grid(row=i, column=j, padx=3, pady=3)
+                row.append(cell)
+            self.cells.append(row)
+
+    def on_button1_click(self):
+        self.button1.config(bg="#32a852")
+        self.button2.config(bg="#535353")
+        self.button3.config(bg="#535353")
+        self.update_cells_text("Botão 1 clicado")
+
+    def on_button2_click(self):
+        self.button1.config(bg="#535353")
+        self.button2.config(bg="#32a852")
+        self.button3.config(bg="#535353")
+        self.update_cells_text("Botão 2 clicado")
+
+    def on_button3_click(self):
+        self.button1.config(bg="#535353")
+        self.button2.config(bg="#535353")
+        self.button3.config(bg="#32a852")
+        self.update_cells_text("Botão 3 clicado")
+
+    def update_cells_text(self, text):
+        for row in self.cells:
+            for cell in row:
+                cell.config(text=text)
 
 
 appFrame = VirtualTableTopGUI()
