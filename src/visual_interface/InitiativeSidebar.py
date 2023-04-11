@@ -10,7 +10,7 @@ class InitiativeSidebar(Widget):
 
         # Character Info
 
-        self._initiave_text = tk.Label(self.frame, text="Initiave", bg="#3B3B3B", 
+        self._initiave_text = tk.Label(self.frame, text="Initiative", bg="#3B3B3B", 
                                        font=("helvetica", 30), fg="#e3e3e3", padx=10)
         self._initiave_text.pack(side="top")
     
