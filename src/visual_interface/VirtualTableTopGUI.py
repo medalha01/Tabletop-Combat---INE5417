@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter import *
 from CharacterSidebar import CharacterSidebar
+from InitiativeSidebar import InitiativeSidebar
 
 
 class VirtualTableTopGUI(tk.Tk):
@@ -14,7 +15,7 @@ class VirtualTableTopGUI(tk.Tk):
 
         self.setMenu()
         self.setBar()
-        self.setGrid(10)
+        self.setGrid(5)
 
     def setMenu(self):
         appMenubar = Menu(self)
@@ -45,8 +46,8 @@ class VirtualTableTopGUI(tk.Tk):
         #sidebar_char = tk.Frame(self, bg="#3B3B3B", width=200)
         self._sidebar_char.frame.pack(side="left", fill="y")
 
-        sidebar_init = tk.Frame(self, bg="#3B3B3B", width=100)
-        sidebar_init.pack(side="right", fill="y")
+        self._sidebar_init = InitiativeSidebar(self)
+        self._sidebar_init.frame.pack(side="right", fill="y")
 
     """         self.button1 = tk.Button(
             sidebar_char,
