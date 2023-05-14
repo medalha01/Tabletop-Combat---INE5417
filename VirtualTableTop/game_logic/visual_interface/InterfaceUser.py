@@ -16,8 +16,8 @@ class InterfaceUser(PyNetgamesServerListener):
         self.match_id = 0
         self.position = 0
         self.connected = False
-        self.visualInterface = VirtualTableTopGUI(self)
-        # self.gameboard = Board()
+        self.gui = VirtualTableTopGUI(self)
+        # self.board = Board()
         self.name = ""
         self.start = False
         self.settings = False
@@ -36,14 +36,14 @@ class InterfaceUser(PyNetgamesServerListener):
         self.has_player_char = False
         self.has_initiave = False
 
-    # self.gameboard = Board()
+    # self.board = Board()
 
     def save_character(self, filepath):
         with open(filepath) as json_file:
             json_file.write(json.dumps(self.characters))
 
     def main(self):
-        self.visualInterface.mainloop()
+        self.gui.mainloop()
 
     def add_listener(self):
         self.server_proxy = PyNetgamesServerProxy()

@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 py_netgames_client="*"
+pillow="*"
 
 
 [requires]

@@ -83,11 +83,11 @@ class VirtualTableTopGUI(tk.Tk):
 
         matchMenu.add_command(
             label="Start Match",
-            command=lambda: self.notify_message("Something went wrong!"),
+            command=self.interface.send_match,
         )
         matchMenu.add_command(
             label="Configure Match",
-            command=self.interface.send_match,
+            command=lambda: self.notify_message("Something went wrong!"),
         )
 
         characterMenu.add_command(
