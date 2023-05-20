@@ -32,13 +32,15 @@ class VirtualTableTopGUI(tk.Tk):
         self.canvas.pack(side="right", fill="both", expand=True)
         self.tile_size = tileSize
         image = Image.open(backgroundImageName)
+        self.grid_width = image.width // self.tile_size
+        self.grid_height = image.height // self.tile_size
+        image = image.resize((tileSize,tileSize), Image.ANTIALIAS)
         background_image = ImageTk.PhotoImage(image)
         self.img = background_image
+        print(self.img.height())
+        print(tileSize)
+        
         self.canvas.create_image(0, 0, anchor="nw", image=self.img)
-
-        self.grid_width = self.img.width() // self.tile_size
-        self.grid_height = self.img.height() // self.tile_size
-
         self.tiles = []
         for row in range(self.grid_height):
             tile_row = []
@@ -47,7 +49,8 @@ class VirtualTableTopGUI(tk.Tk):
                 y1 = row * self.tile_size
                 x2 = x1 + self.tile_size
                 y2 = y1 + self.tile_size
-                tile = self.canvas.create_rectangle(x1, y1, x2, y2, fill="", outline="")
+                self.canvas.create_image(x1, y1, anchor="nw", image=self.img)
+                tile = self.canvas.create_rectangle(x1, y1, x2, y2, fill="", outline="black")
                 tile_row.append(tile)
             self.tiles.append(tile_row)
         self.canvas.bind("<Button-1>", self.on_canvas_click)
