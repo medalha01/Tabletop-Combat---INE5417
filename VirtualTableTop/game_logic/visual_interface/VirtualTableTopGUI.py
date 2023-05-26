@@ -28,17 +28,16 @@ class VirtualTableTopGUI(tk.Tk):
         )
 
     def setCanvas(self, backgroundImageName, tileSize):
-        self.canvas = tk.Canvas(self, bg="#F7F7F7", width=800, height=600)
-        self.canvas.pack(side="right", fill="both", expand=True)
         self.tile_size = tileSize
         image = Image.open(backgroundImageName)
-        self.grid_width = image.width // self.tile_size
-        self.grid_height = image.height // self.tile_size
+        self.grid_width = 20#image.width // self.tile_size
+        self.grid_height = 22#image.height // self.tile_size
         image = image.resize((tileSize,tileSize), Image.ANTIALIAS)
         background_image = ImageTk.PhotoImage(image)
         self.img = background_image
-        print(self.img.height())
-        print(tileSize)
+        self.canvas = tk.Canvas(self, bg="#F7F7F7", #width=800, height=600, 
+                                scrollregion=(0, 0, tileSize*self.grid_width+20, tileSize*self.grid_height+20))
+        self.canvas.pack(side="right", fill="both", expand=True)
         
         self.canvas.create_image(0, 0, anchor="nw", image=self.img)
         self.tiles = []
@@ -55,9 +54,18 @@ class VirtualTableTopGUI(tk.Tk):
             self.tiles.append(tile_row)
         self.canvas.bind("<Button-1>", self.on_canvas_click)
 
+        self._y_canvas_scrollbar = tk.Scrollbar(self.canvas)
+        self._y_canvas_scrollbar.pack(side="right", fill="y")
+        self._y_canvas_scrollbar.config(command=self.canvas.yview)
+        self.canvas.config(yscrollcommand=self._y_canvas_scrollbar.set)
+        self._x_canvas_scrollbar = tk.Scrollbar(self.canvas, orient="horizontal")
+        self._x_canvas_scrollbar.pack(side="bottom", fill="x")
+        self._x_canvas_scrollbar.config(command=self.canvas.xview)
+        self.canvas.config(xscrollcommand=self._x_canvas_scrollbar.set)
+
     def on_canvas_click(self, event):
-        col = event.x // self.tile_size
-        row = event.y // self.tile_size
+        col = int((event.x) // self.tile_size)
+        row = int((event.y) // self.tile_size)
         tile = self.tiles[row][col]
         color = f"#{random.randint(0, 0xFFFFFF):06x}"
         if self.canvas.itemcget(tile, "fill") == "":
