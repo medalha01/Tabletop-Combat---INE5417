@@ -29,9 +29,9 @@ class VirtualTableTopGUI(tk.Tk):
 
     def setCanvas(self, backgroundImageName, tileSize):
         self.tile_size = tileSize
+        self.grid_width = 100#image.width // self.tile_size
+        self.grid_height = 100#image.height // self.tile_size
         image = Image.open(backgroundImageName)
-        self.grid_width = 20#image.width // self.tile_size
-        self.grid_height = 22#image.height // self.tile_size
         image = image.resize((tileSize,tileSize), Image.ANTIALIAS)
         background_image = ImageTk.PhotoImage(image)
         self.img = background_image
