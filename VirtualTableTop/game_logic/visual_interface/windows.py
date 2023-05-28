@@ -24,7 +24,7 @@ class SettingWindow(AuxWindow):
         return "Settings Window"
 
     def get_window_geometry(self):
-        return "300x300"
+        return "500x200"
 
     def get_status_labels(self):
         return ["Number of Players", "Are you the DM?"]
