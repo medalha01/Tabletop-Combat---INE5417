@@ -17,19 +17,17 @@ class AuxWindow(ABC):
         return window
 
     def set_window_properties(self, window):
-        window.title(title)
+        window.title(self.get_window_title())
         window.geometry(self.get_window_geometry())
         return window
 
-    @abstractmethod
     def get_window_title(self):
         pass
 
-    @abstractmethod
     def get_window_geometry(self):
         pass
 
-    def __create_textboxes(self, window):
+    def create_textboxes(self, window):
         # Create the textboxes in the window
         status = self.get_status_labels()
         for i, label in enumerate(status):

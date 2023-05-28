@@ -1,4 +1,5 @@
-from AuxWidow import AuxWindow
+from VirtualTableTop.game_logic.visual_interface.AuxWidow import AuxWindow
+import tkinter as tk
 
 
 class CreateCharWindow(AuxWindow):
