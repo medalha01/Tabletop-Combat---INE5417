@@ -116,9 +116,7 @@ class VirtualTableTopGUI(tk.Tk):
             command=lambda: self.notify_message("Something went wrong!"),
         )
 
-        characterMenu.add_command(
-            label="Make Character", command=self.open_textboxes_window
-        )
+        characterMenu.add_command(label="Make Character", command=self.openCharCreation)
         characterMenu.add_command(
             label="Save Character",
             command=lambda: self.notify_message("Something went wrong!"),
@@ -150,6 +148,10 @@ class VirtualTableTopGUI(tk.Tk):
     def notify_message(self, mensagem):
         messagebox.showinfo("Warning", mensagem)
 
-    def open_textboxes_window(self):
+    def openCharCreation(self):
         CCW = CreateCharWindow()
         CCW.open_window()
+
+    def openSettingWindow(self):
+        SW = SettingWindow()
+        SW.open_window()
