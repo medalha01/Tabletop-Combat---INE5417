@@ -71,6 +71,7 @@ class AuxWindow(ABC):
 
         # Close the window
         window.destroy()
+        return self.textbox_entries
 
     def notifyInvalidValue(self, mensagem):
         messagebox.showinfo("Warning", mensagem)
