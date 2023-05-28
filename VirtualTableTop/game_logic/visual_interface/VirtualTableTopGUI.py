@@ -11,6 +11,8 @@ from VirtualTableTop.game_logic.visual_interface.InitiativeSidebar import (
     InitiativeSidebar,
 )
 from PIL import Image, ImageTk
+from VirtualTableTop.game_logic.visual_interface.windows import CreateCharWindow
+from VirtualTableTop.game_logic.visual_interface.windows import SettingWindow
 
 
 class VirtualTableTopGUI(tk.Tk):
@@ -28,6 +30,7 @@ class VirtualTableTopGUI(tk.Tk):
             os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"), 32
         )
         self.textbox_entries = {}
+        self.isWindowOpen = False
 
     def setCanvas(self, backgroundImageName, tileSize):
         self.tile_size = tileSize
@@ -113,9 +116,7 @@ class VirtualTableTopGUI(tk.Tk):
             command=lambda: self.notify_message("Something went wrong!"),
         )
 
-        characterMenu.add_command(
-            label="Make Character", command=self.open_textboxes_window
-        )
+        characterMenu.add_command(label="Make Character", command=self.openCharCreation)
         characterMenu.add_command(
             label="Save Character",
             command=lambda: self.notify_message("Something went wrong!"),
@@ -147,50 +148,10 @@ class VirtualTableTopGUI(tk.Tk):
     def notify_message(self, mensagem):
         messagebox.showinfo("Warning", mensagem)
 
-    def open_textboxes_window(self):
-        textboxes_window = tk.Toplevel()
-        textboxes_window.title("Character Creation")
-        textboxes_window.geometry("300x300")
-        status = ["Name", "Level", "HP", "Initiative", "CA", "Speed"]
+    def openCharCreation(self):
+        CCW = CreateCharWindow()
+        CCW.open_window()
 
-        for i in range(6):
-            label_frame = tk.Frame(textboxes_window, bg="#3B3B3B", padx=5, pady=5)
-            label_frame.pack(side="top", fill="x")
-
-            textbox_label = tk.Label(
-                label_frame,
-                text=status[i],
-                font=("helvetica", 12),
-                bg="#3B3B3B",
-                fg="#e3e3e3",
-                width=10,
-            )
-            textbox_label.pack(side="left")
-
-            textbox = tk.Entry(label_frame)
-            textbox.pack(side="right", expand=True, fill="x", padx=5)
-
-            # Store the textbox entry in the dictionary with the label as the key
-            self.textbox_entries[status[i]] = textbox
-
-        # Create a button to retrieve the values
-        button_frame = tk.Frame(textboxes_window, bg="#3B3B3B", padx=5, pady=5)
-        button_frame.pack(side="top", fill="x")
-        retrieve_button = tk.Button(
-            button_frame,
-            text="Retrieve Values",
-            command=lambda: self.retrieve_values(textboxes_window),
-        )
-        retrieve_button.pack(side="bottom", pady=10)
-
-        button_frame = tk.Frame(textboxes_window, bg="#3B3B3B", padx=5, pady=5)
-        button_frame.pack(side="bottom", fill="both", expand=True)
-
-    def retrieve_values(self, window):
-        # Retrieve the values from the textbox entries
-        for label, entry in self.textbox_entries.items():
-            value = entry.get()
-            print(f"{label}: {value}")
-
-        # Close the window after retrieving values
-        window.destroy()
+    def openSettingWindow(self):
+        SW = SettingWindow()
+        SW.open_window()

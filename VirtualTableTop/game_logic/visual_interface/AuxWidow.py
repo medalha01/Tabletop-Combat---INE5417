@@ -17,15 +17,13 @@ class AuxWindow(ABC):
         return window
 
     def set_window_properties(self, window):
-        window.title(title)
+        window.title(self.get_window_title())
         window.geometry(self.get_window_geometry())
         return window
 
-    @abstractmethod
     def get_window_title(self):
         pass
 
-    @abstractmethod
     def get_window_geometry(self):
         pass
 
@@ -71,6 +69,7 @@ class AuxWindow(ABC):
 
         # Close the window
         window.destroy()
+        return self.textbox_entries
 
     def notifyInvalidValue(self, mensagem):
         messagebox.showinfo("Warning", mensagem)
