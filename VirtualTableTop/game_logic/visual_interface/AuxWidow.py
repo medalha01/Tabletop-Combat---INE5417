@@ -29,7 +29,7 @@ class AuxWindow(ABC):
     def get_window_geometry(self):
         pass
 
-    def create_textboxes(self, window):
+    def __create_textboxes(self, window):
         # Create the textboxes in the window
         status = self.get_status_labels()
         for i, label in enumerate(status):

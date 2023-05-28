@@ -28,6 +28,7 @@ class VirtualTableTopGUI(tk.Tk):
             os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"), 32
         )
         self.textbox_entries = {}
+        self.isWindowOpen = False
 
     def setCanvas(self, backgroundImageName, tileSize):
         self.tile_size = tileSize

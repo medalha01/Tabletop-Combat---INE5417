@@ -11,14 +11,11 @@ class CreateCharWindow(AuxWindow):
     def get_status_labels(self):
         return ["Name", "Level", "HP", "Initiative", "CA", "Speed"]
 
-    def run_window(self):
+    def open_window(self):
         window = tk.Toplevel()
         self.set_window_properties(window)
         self.create_textboxes(window)
         self.create_retrieve_button(window)
-
-    def get_values(self):
-        return self.textbox_entries
 
 
 class SettingWindow(AuxWindow):
@@ -48,7 +45,7 @@ class SettingWindow(AuxWindow):
         checkbox = tk.Checkbutton(checkbox_frame, variable=self.checkbox_value)
         checkbox.pack(side="right", padx=5)
 
-    def run_window(self):
+    def open_window(self):
         window = tk.Toplevel()
         self.set_window_properties(window)
         self.create_textboxes(window)
@@ -75,9 +72,6 @@ class CreateAction(AuxWindow):
         self.create_textboxes(window)
         self.create_retrieve_button(window)
 
-    def get_values(self):
-        return self.textbox_entries
-
 
 class StartMatchWindow(AuxWindow):
     def get_window_title(self):
@@ -89,14 +83,8 @@ class StartMatchWindow(AuxWindow):
     def get_status_labels(self):
         return ["AAA"]
 
-    def run_window(self):
+    def open_window(self):
         window = tk.Toplevel()
         self.set_window_properties(window)
         self.create_textboxes(window)
         self.create_retrieve_button(window)
-
-    def get_values(self):
-        return self.textbox_entries
-
-    def get_match_info(self):
-        return self.textbox_entries
