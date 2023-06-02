@@ -7,7 +7,7 @@ class Character:
     def __init__(self):
         self.pc : bool
         self.name : str
-        self.position : tuple(int,int)
+        self.position : tuple[int, int]
         self.level : int
         self.hp_max : int
         self.initiative : int
@@ -18,7 +18,7 @@ class Character:
         self.actions_amount : int
         self.moved_amount : float
         self.actions_used : int
-    
+
     def set_attributes(self, attributes : dict):
         self.pc = attributes["pc"]
         self.name = attributes["name"]
@@ -36,7 +36,10 @@ class Character:
 
         for action in attributes["actions"]:
             self.list_action(action)
-    
+
+    def set_position(self, position: tuple[int,int]):
+        self.position = position
+
     def list_action(self, action : dict):
         self.actions[action["name"]] = Action()
         self.actions[action["name"]].set_attributes(action)
@@ -56,7 +59,7 @@ class Character:
     def get_moved_amount(self):
         return self.moved_amount
     
-    def get_postion(self):
+    def get_position(self):
         return self.position
 
     def get_speed(self):

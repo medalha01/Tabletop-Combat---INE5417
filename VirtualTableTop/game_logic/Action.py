@@ -24,6 +24,9 @@ class Action:
     def get_range(self):
         return self.range
     
+    def get_aoe(self):
+        return self.aoe_radius
+    
     def get_type(self):
         return self.type
     
