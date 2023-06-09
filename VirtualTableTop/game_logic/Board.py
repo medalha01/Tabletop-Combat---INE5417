@@ -29,7 +29,7 @@ class Board:
         return False
     
     def check_for_gameover(self):
-        pc, npc, dead_pc, alve_pc = 0, 0, 0, 0
+        pc, npc, dead_pc, dead_npc = 0, 0, 0, 0
         for char in self.characters:
             if char.get_pc: 
                 pc+=1

@@ -2,9 +2,9 @@
 
 class MatchState:
     def __init__(self) -> None:
-        self.postions : list[list[str]] = []
+        self.positions : list[list[str]] = []
         self.characters : dict[str : dict] = {}
-        self.initiative_queue : list[dict] = []
+        self.initiative_queue : list[str] = []
         self.character : dict = {}
         self.game_over : bool
     
@@ -13,7 +13,7 @@ class MatchState:
             aux = []
             for position in line:
                 aux.append(position.get_position.name)
-            self.postions.append(aux)
+            self.positions.append(aux)
     
     def set_characters(self, characters):
         for character in characters:

@@ -9,20 +9,20 @@ class CharacterSidebar(Widget):
 
         # Character Info
 
-        self._character_info = tk.Frame(self.frame, bg="#3B3B3B", width=200, padx=10)
+        self._character_info = tk.Frame(self.frame, bg="#3B3B3B", width=300, padx=10, )
         self._character_info.pack(side="top")
 
         # self._text_name = tk.Label(
-        #   self._character_info,
-        #  text="New Character",
+        # self._character_info,
+        # text="New Character",
         # bg="#3B3B3B",
         # fg="#e3e3e3",
         # )
         self._text_att = tk.Label(
-            self._character_info,
-            text="Level: HP: Initiave: CA: Speed: ",
+            self.frame,
+            text="Level:\n HP: \nInitiave: \nCA: \nSpeed: ",
             font=("helvetica", 16),
-            wraplength=100,
+            wraplength=300,
             bg="#3B3B3B",
             fg="#e3e3e3",
             justify="left",
@@ -33,7 +33,7 @@ class CharacterSidebar(Widget):
         # Actions Sidebar
 
         self._action_sidebar = tk.Canvas(
-            self.frame, bg="#3B3B3B", scrollregion=(0, 0, 5000, 5000)
+            self.frame, bg="#3B3B3B", width=300, scrollregion=(0, 0, 5000, 5000)
         )
         self._action_sidebar.pack(anchor="w", expand=True, fill="both")
         self._action_scrollbar = tk.Scrollbar(self._action_sidebar)
@@ -44,13 +44,14 @@ class CharacterSidebar(Widget):
         self._action_scrollbar.config(command=self._action_sidebar.yview)
         self._action_sidebar.config(yscrollcommand=self._action_scrollbar.set)
 
+    def update_action_list(self, action_list):
         self._action_list = [CharAction(self._action) for i in range(100)]
         for action in self._action_list:
             action.frame.pack(fill="x")
 
-    def update_char_info(self, character, speed_used="0.0"):
+    def update_char_info(self, character: dict, speed_used="0.0"):
         self._text_name.configure(text=character.name)
-        upd_text = f"Level: {character.level} HP: {character.hp} Initiave: {character.initiative} CA: {character.ca} Speed: {speed_used}]/{character.speed}"
+        upd_text = f"Level: {character['level']} \nHP: {character['hp']}/{character['hp_max']} \nInitiave: {character['initiative']} \nCA: {character['ca']} \nSpeed: {character['moved_amount']}]/{character['speed']}"
         self._text_att.configure(text=upd_text)
 
         # ...

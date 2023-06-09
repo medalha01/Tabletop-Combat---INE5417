@@ -4,16 +4,12 @@ import random
 import os
 from tkinter import messagebox
 from tkinter import font
-from VirtualTableTop.game_logic.visual_interface.CharacterSidebar import (
-    CharacterSidebar,
-)
-from VirtualTableTop.game_logic.visual_interface.InitiativeSidebar import (
-    InitiativeSidebar,
-)
+from VirtualTableTop.game_logic.visual_interface.CharacterSidebar import CharacterSidebar
+from VirtualTableTop.game_logic.visual_interface.InitiativeSidebar import InitiativeSidebar
 from PIL import Image, ImageTk
 from VirtualTableTop.game_logic.visual_interface.windows import CreateCharWindow
 from VirtualTableTop.game_logic.visual_interface.windows import SettingWindow
-
+from VirtualTableTop.game_logic.MatchState import MatchState
 
 class VirtualTableTopGUI(tk.Tk):
     def __init__(self, interface):
@@ -22,13 +18,15 @@ class VirtualTableTopGUI(tk.Tk):
         self.interface = interface
 
         self.title("Virtual Table Top")
-        self.geometry("800x600")
+        self.geometry("1280x720")
         self.setMenu()
         self.setBar()
         # VirtualTableTop/game_logic/visual_interface/
-        self.setCanvas(
-            os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"), 32
-        )
+        # self.setCanvas(
+        #     os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"), 32
+        # )
+        self.update_board_image(os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"))
+        self.update_board({}, [['','','','1',''],['2','','','3',''],['','','3','',''], ['','','3','',''], ['','','3','','']])
         self.textbox_entries = {}
         self.isWindowOpen = False
 
@@ -77,6 +75,78 @@ class VirtualTableTopGUI(tk.Tk):
         self._x_canvas_scrollbar.pack(side="bottom", fill="x")
         self._x_canvas_scrollbar.config(command=self.canvas.xview)
         self.canvas.config(xscrollcommand=self._x_canvas_scrollbar.set)
+
+    def update_board_image(self, file_name):
+        self.image_file_name = file_name
+
+    def update_view(self, match_status: int, match_state: MatchState):
+
+        self.update_board(match_state.characters, match_state.postions)
+
+        self.update_initiative(match_state.characters, match_state.initiative_queue)
+
+        self.update_character(match_state.character)
+
+        self.update_context_button(match_status)
+
+    def update_board(self, characters: dict[str : dict], postions: list[list[str]]):
+
+        self.grid_width = len(postions[0])
+        self.grid_height = len(postions)
+
+        self.tile_size = int(600//(max(self.grid_width, self.grid_height)))
+        image = Image.open(self.image_file_name)
+        image = image.resize((self.tile_size, self.tile_size), Image.ANTIALIAS)
+        background_image = ImageTk.PhotoImage(image)
+        self.img = background_image
+        self.canvas = tk.Canvas(
+            self,
+            bg="#F7F7F7", #width=800, height=600,
+            scrollregion=(
+                0,
+                0,
+                self.tile_size * self.grid_width + 20,
+                self.tile_size * self.grid_height + 20,
+            ),
+        )
+        self.canvas.pack(side="right", fill="both", expand=True)
+
+        self.tiles = []
+        for row in range(self.grid_height):
+            tile_row = []
+            for col in range(self.grid_width):
+                x1 = col * self.tile_size
+                y1 = row * self.tile_size
+                x2 = x1 + self.tile_size
+                y2 = y1 + self.tile_size
+                self.canvas.create_image(x1, y1, anchor="nw", image=self.img)
+                tile = self.canvas.create_rectangle(
+                    x1, y1, x2, y2, fill="", outline="black"
+                )
+                if postions[row][col] != '':
+                    color = f"#{random.randint(0, 0xFFFFFF):06x}"
+                    self.canvas.itemconfig(tile, fill=color)
+                tile_row.append(tile)
+            self.tiles.append(tile_row)
+        # self.canvas.bind("<Button-1>", self.on_canvas_click)
+
+        self._y_canvas_scrollbar = tk.Scrollbar(self.canvas)
+        self._y_canvas_scrollbar.pack(side="right", fill="y")
+        self._y_canvas_scrollbar.config(command=self.canvas.yview)
+        self.canvas.config(yscrollcommand=self._y_canvas_scrollbar.set)
+        self._x_canvas_scrollbar = tk.Scrollbar(self.canvas, orient="horizontal")
+        self._x_canvas_scrollbar.pack(side="bottom", fill="x")
+        self._x_canvas_scrollbar.config(command=self.canvas.xview)
+        self.canvas.config(xscrollcommand=self._x_canvas_scrollbar.set)
+
+    def update_initiative(self, characters: dict[str : dict], initiative_queue: list[str]):
+        pass
+
+    def update_character(self, character: dict):
+        pass
+
+    def update_context_button(self, ):
+        pass
 
     def on_canvas_click(self, event):
         col = int((event.x) // self.tile_size)
