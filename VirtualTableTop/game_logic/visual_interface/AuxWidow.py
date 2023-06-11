@@ -32,7 +32,7 @@ class AuxWindow(ABC):
         status = self.get_status_labels()
         for i, label in enumerate(status):
             label_frame = tk.Frame(window, bg="#3B3B3B", padx=5, pady=5)
-            label_frame.pack(side="top", fill="x")
+            label_frame.pack(side="top", fill="x", padx=10)  # Adjust the padx value as needed
 
             textbox_label = tk.Label(
                 label_frame,
@@ -41,8 +41,9 @@ class AuxWindow(ABC):
                 bg="#3B3B3B",
                 fg="#e3e3e3",
                 width=10,
+                anchor="w"  # Align the label text to the left
             )
-            textbox_label.pack(side="left")
+            textbox_label.pack(side="left", padx=(0, 10))  # Adjust the padx value as needed
 
             textbox = tk.Entry(label_frame)
             textbox.pack(side="right", expand=True, fill="x", padx=5)
