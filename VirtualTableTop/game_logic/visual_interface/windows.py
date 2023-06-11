@@ -24,7 +24,8 @@ class CreateCharWindow(AuxWindow):
         button.pack()
 
     def create_action_window(self):
-        CreateAction.run_window(self)
+        window = CreateAction()
+        window.run_window()
 
 class SettingWindow(AuxWindow):
     def get_window_title(self):
