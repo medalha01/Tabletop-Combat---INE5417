@@ -17,7 +17,14 @@ class CreateCharWindow(AuxWindow):
         self.set_window_properties(window)
         self.create_textboxes(window)
         self.create_retrieve_button(window)
+        self.create_window_button(window)
 
+    def create_window_button(self, parent_window):
+        button = tk.Button(parent_window, text="Add Actions", command=self.create_action_window)
+        button.pack()
+
+    def create_action_window(self):
+        CreateAction.run_window(self)
 
 class SettingWindow(AuxWindow):
     def get_window_title(self):
@@ -27,7 +34,7 @@ class SettingWindow(AuxWindow):
         return "500x200"
 
     def get_status_labels(self):
-        return ["Number of Players", "Are you the DM?"]
+        return ["Number \n of Players", "Are you\n the DM?"]
 
     def create_checkbox(self, window):
         checkbox_frame = tk.Frame(window, bg="#3B3B3B", padx=5, pady=5)
