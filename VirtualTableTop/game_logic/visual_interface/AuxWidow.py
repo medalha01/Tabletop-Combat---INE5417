@@ -28,11 +28,11 @@ class AuxWindow(ABC):
         pass
 
     def create_textboxes(self, window):
-        # Create the textboxes in the window
+        # PQ VC NAO FUNCIODSUVNSVNSAU
         status = self.get_status_labels()
         for i, label in enumerate(status):
             label_frame = tk.Frame(window, bg="#3B3B3B", padx=5, pady=5)
-            label_frame.pack(side="top", fill="x", padx=10)  # Adjust the padx value as needed
+            label_frame.pack(side="top", fill="x", padx=10, expand=True)  # ???
 
             textbox_label = tk.Label(
                 label_frame,
@@ -41,14 +41,16 @@ class AuxWindow(ABC):
                 bg="#3B3B3B",
                 fg="#e3e3e3",
                 width=10,
-                anchor="w"  # Align the label text to the left
+                anchor="w"  # ancora no canto esquerdo
             )
-            textbox_label.pack(side="left", padx=(0, 10))  # Adjust the padx value as needed
+            textbox_label.pack(side="left", padx=(0, 10))  # Ajustar X como necessario
 
             textbox = tk.Entry(label_frame)
             textbox.pack(side="right", expand=True, fill="x", padx=5)
 
+
             self.textbox_entries[label] = textbox
+            window.configure(bg=textbox_label["bg"])
 
     def create_retrieve_button(self, window):
         # Create the retrieve button in the window
