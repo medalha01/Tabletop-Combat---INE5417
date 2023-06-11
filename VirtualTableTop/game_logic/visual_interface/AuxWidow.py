@@ -5,6 +5,7 @@ from abc import ABC
 class AuxWindow(ABC):
     def __init__(self, window) -> None:
         super().__init__()
+        self.__values = None
 
     def __init__(self):
         self.textbox_entries = {}
@@ -69,6 +70,8 @@ class AuxWindow(ABC):
         for label, entry in self.textbox_entries.items():
             value = entry.get()
             print(f"{label}: {value}")
+        
+        self.__values = self.textbox_entries
 
         # Close the window
         window.destroy()
