@@ -7,8 +7,7 @@ from tkinter import font
 from VirtualTableTop.game_logic.visual_interface.CharacterSidebar import CharacterSidebar
 from VirtualTableTop.game_logic.visual_interface.InitiativeSidebar import InitiativeSidebar
 from PIL import Image, ImageTk
-from VirtualTableTop.game_logic.visual_interface.windows import CreateCharWindow
-from VirtualTableTop.game_logic.visual_interface.windows import SettingWindow
+from VirtualTableTop.game_logic.visual_interface.windows import CreateCharWindow, SettingWindow, StartMatchWindow
 from VirtualTableTop.game_logic.MatchState import MatchState
 
 class VirtualTableTopGUI(tk.Tk):
@@ -179,14 +178,14 @@ class VirtualTableTopGUI(tk.Tk):
 
         matchMenu.add_command(
             label="Start Match",
-            command=self.interface.send_match,
+            command=self.interface.start_match,
         )
         matchMenu.add_command(
             label="Configure Match",
-            command=lambda: self.notify_message("Something went wrong!"),
+            command=lambda: self.interface.send_match_settings,
         )
 
-        characterMenu.add_command(label="Make Character", command=self.openCharCreation)
+        characterMenu.add_command(label="Make Character", command=self.interface.make_character)
         characterMenu.add_command(
             label="Save Character",
             command=lambda: self.notify_message("Something went wrong!"),
@@ -218,10 +217,16 @@ class VirtualTableTopGUI(tk.Tk):
     def notify_message(self, mensagem):
         messagebox.showinfo("Warning", mensagem)
 
-    def openCharCreation(self):
+    def open_char_creation(self):
         CCW = CreateCharWindow()
         CCW.open_window()
 
-    def openSettingWindow(self):
+    def open_start_match(self):
+        SMW = StartMatchWindow()
+        SMW.open_window()
+
+    def open_settings_window(self):
         SW = SettingWindow()
         SW.open_window()
+        # self.update_board_image()
+        # self.update_board()

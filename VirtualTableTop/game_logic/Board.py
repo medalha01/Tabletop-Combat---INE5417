@@ -14,6 +14,9 @@ class Board:
         self.initiative_queue : Queue = Queue()
         self.game_over : bool = False
     
+    def get_character_count(self):
+        return len(self.characters)
+    
     def get_match_state(self) -> MatchState:
         match_state = MatchState()
         match_state.set_position(self.positions)

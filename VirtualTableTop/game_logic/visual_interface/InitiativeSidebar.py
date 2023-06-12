@@ -36,7 +36,7 @@ class InitiativeSidebar(Widget):
             bg="orange",
             fg="white",
             font=font.Font(weight="bold"),
-            command=window.openSettingWindow,
+            command=window.interface.send_match_settings,
         )
         # Pack the button at the bottom left
         self.__startMatchButton.pack(side=tk.RIGHT, anchor=tk.SW)
