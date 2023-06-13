@@ -32,12 +32,14 @@ class CharacterSidebar(Widget):
         self._text_att.pack(side="top", anchor="w")
 
         # Actions Sidebar
+        self._action_disselect_button = tk.Button(self.frame, text='Disselect Action', command=window.select_action)
+        self._action_disselect_button.pack(anchor='n', fill='x')
 
         self._action_sidebar = tk.Canvas(
-            self.frame, bg="#3B3B3B", width=300, scrollregion=(0, 0, 5000, 5000)
+            self.frame, bg="#3B3B3B", scrollregion=(0, 0, 1000, 1000)
         )
         self._action_sidebar.pack(anchor="w", expand=True, fill="both")
-        self._action_scrollbar = tk.Scrollbar(self._action_sidebar)
+        self._action_scrollbar = tk.Scrollbar(self._action_sidebar,)
         self._action_scrollbar.pack(side="right", fill="y")
 
         self._action = tk.Frame(self._action_sidebar, bg="#3B3B3B")
@@ -48,12 +50,11 @@ class CharacterSidebar(Widget):
     def update_action_list(self, action_list):
         self._action_list = []
         for action in action_list:
-            action_widget = self._text = tk.Label(self._action, text=f"{action['name']}\n{action['dices'][0]}d{action['dices'][1]}", font=("arial", 10),bg="#3B3B3B")
-            self._text.bind("<Button-1>", lambda event, t="acao clicada", p="blz?": tk.messagebox.askquestion(t,p))
-            
-            self._text.pack(side="top", anchor="w")
+            action_widget = tk.Label(self._action, text=f"{action['name']}\n{action['dices'][0]}d{action['dices'][1]}", 
+                                                  font=("arial", 14),bg="#3B3B3B", fg="#e3e3e3",highlightcolor="#e3e3e3", highlightthickness=1)
+            action_widget.bind("<Button-1>", lambda event, action=action['name']: self._window.select_action(action))
+            action_widget.pack(anchor='nw', fill='x')
             self._action_list.append(action_widget)
-            action_widget.pack(fill="x")
 
     def update_char_info(self, character: dict):
         self._text_name.configure(text=character['name'])

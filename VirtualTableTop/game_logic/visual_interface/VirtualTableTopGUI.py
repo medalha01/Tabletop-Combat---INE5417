@@ -13,7 +13,7 @@ from VirtualTableTop.game_logic.MatchState import MatchState
 class VirtualTableTopGUI(tk.Tk):
     def __init__(self, interface):
         super().__init__()
-
+        self._action_selected = ""
         self.interface = interface
 
         self.title("Virtual Table Top")
@@ -100,7 +100,7 @@ class VirtualTableTopGUI(tk.Tk):
         self.img = background_image
         self.canvas = tk.Canvas(
             self,
-            bg="#F7F7F7", #width=800, height=600,
+            bg="#3B3B3B", #width=800, height=600,
             scrollregion=(
                 0,
                 0,
@@ -208,7 +208,7 @@ class VirtualTableTopGUI(tk.Tk):
     def setBar(self):
         self._sidebar_char = CharacterSidebar(self)
         self.update_character({"name":"arindel",'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3','ca':'14','moved_amount':'3','speed':'6',
-                               'actions': [{'name':'sword slash', 'dices':(2, 4)}]})
+                               'actions': [{'name':'sword slash', 'dices':(2, 4)},{'name':'heal', 'dices':(1, 4)}]})
 
         # sidebar_char = tk.Frame(self, bg="#3B3B3B", width=200)
         self._sidebar_char.frame.pack(side="left", fill="y")
@@ -233,3 +233,7 @@ class VirtualTableTopGUI(tk.Tk):
         SW.open_window()
         # self.update_board_image()
         # self.update_board()
+
+    def select_action(self, action_name=''):
+        self._action_selected = action_name
+        print(f"acao {self._action_selected} selecionada")
