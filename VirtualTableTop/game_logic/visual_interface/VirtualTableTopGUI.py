@@ -139,7 +139,7 @@ class VirtualTableTopGUI(tk.Tk):
         self.canvas.config(xscrollcommand=self._x_canvas_scrollbar.set)
 
     def update_initiative(self, characters: dict[str : dict], initiative_queue: list[str]):
-        pass
+        self._sidebar_init.update_char_info(characters, initiative_queue)
 
     def update_character(self, character: dict):
         self._sidebar_char.update_char_info(character)
@@ -214,8 +214,9 @@ class VirtualTableTopGUI(tk.Tk):
         self._sidebar_char.frame.pack(side="left", fill="y")
 
         self._sidebar_init = InitiativeSidebar(self)
+        self.update_initiative({'troy':{'name':'troy', 'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3'}}, ['troy']*2)
 
-        self._sidebar_init.frame.pack(side="right", fill="y")
+        self._sidebar_init.frame.pack(side="right", fill="both")
 
     def notify_message(self, mensagem):
         messagebox.showinfo("Warning", mensagem)

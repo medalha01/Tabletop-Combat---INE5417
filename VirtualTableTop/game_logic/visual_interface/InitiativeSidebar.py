@@ -41,10 +41,12 @@ class InitiativeSidebar(Widget):
         # Pack the button at the bottom left
         self.__startMatchButton.pack(side=tk.RIGHT, anchor=tk.SW)
 
-    def update_char_info(self, character_list, speed_used="0.0"):
+    def update_char_info(self, characters: dict[str : dict], initiative_queue: list[str] ):
         # Clear the listbox first
         self._character_listbox.delete(0, tk.END)
 
         # Add the characters to the listbox
-        for character in character_list:
-            self._character_listbox.insert(tk.END, character.name)
+        for name in initiative_queue:
+            char = characters[name]
+            upd_text = f"LV.{char['level']} {char['name']}, HP: {char['hp']}/{char['hp_max']} Initiative: {char['initiative']}"
+            self._character_listbox.insert(tk.END, upd_text)
