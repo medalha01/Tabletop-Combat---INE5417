@@ -6,6 +6,7 @@ class AuxWindow(ABC):
     def __init__(self, window) -> None:
         super().__init__()
         self.__values = None
+        self.checkbox_value = None
 
     def __init__(self):
         self.textbox_entries = {}
@@ -78,4 +79,4 @@ class AuxWindow(ABC):
         return self.textbox_entries
 
     def notifyInvalidValue(self, mensagem):
-        messagebox.showinfo("Warning", mensagem)
+        tk.messagebox.showinfo("Warning", mensagem)

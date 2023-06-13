@@ -6,18 +6,19 @@ import tkinter as tk
 class CharacterSidebar(Widget):
     def __init__(self, window) -> None:
         super().__init__(window)
-
+        self._window = window
         # Character Info
 
         self._character_info = tk.Frame(self.frame, bg="#3B3B3B", width=300, padx=10, )
         self._character_info.pack(side="top")
 
-        # self._text_name = tk.Label(
-        # self._character_info,
-        # text="New Character",
-        # bg="#3B3B3B",
-        # fg="#e3e3e3",
-        # )
+        self._text_name = tk.Label(
+        self._character_info,
+        text="New Character",
+        bg="#3B3B3B",
+        fg="#e3e3e3",
+        font=("helvetica", 20),        
+        )
         self._text_att = tk.Label(
             self.frame,
             text="Level:\n HP: \nInitiave: \nCA: \nSpeed: ",
@@ -27,7 +28,7 @@ class CharacterSidebar(Widget):
             fg="#e3e3e3",
             justify="left",
         )
-        # self._text_name.pack(side="top")
+        self._text_name.pack(side="top")
         self._text_att.pack(side="top", anchor="w")
 
         # Actions Sidebar
@@ -45,13 +46,18 @@ class CharacterSidebar(Widget):
         self._action_sidebar.config(yscrollcommand=self._action_scrollbar.set)
 
     def update_action_list(self, action_list):
-        self._action_list = [CharAction(self._action) for i in range(100)]
-        for action in self._action_list:
-            action.frame.pack(fill="x")
+        self._action_list = []
+        for action in action_list:
+            action_widget = self._text = tk.Label(self._action, text=f"{action['name']}\n{action['dices'][0]}d{action['dices'][1]}", font=("arial", 10),bg="#3B3B3B")
+            self._text.bind("<Button-1>", lambda event, t="acao clicada", p="blz?": tk.messagebox.askquestion(t,p))
+            
+            self._text.pack(side="top", anchor="w")
+            self._action_list.append(action_widget)
+            action_widget.pack(fill="x")
 
-    def update_char_info(self, character: dict, speed_used="0.0"):
-        self._text_name.configure(text=character.name)
-        upd_text = f"Level: {character['level']} \nHP: {character['hp']}/{character['hp_max']} \nInitiave: {character['initiative']} \nCA: {character['ca']} \nSpeed: {character['moved_amount']}]/{character['speed']}"
+    def update_char_info(self, character: dict):
+        self._text_name.configure(text=character['name'])
+        upd_text = f"Level: {character['level']} \nHP: {character['hp']}/{character['hp_max']} \nInitiave: {character['initiative']} \nCA: {character['ca']} \nSpeed: {character['moved_amount']}/{character['speed']}"
         self._text_att.configure(text=upd_text)
 
         # ...

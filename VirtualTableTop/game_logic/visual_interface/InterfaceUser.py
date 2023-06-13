@@ -63,6 +63,7 @@ class InterfaceUser(PyNetgamesServerListener):
                 self.gui.notify_message(notification["message"])
     
     def action_click(self, action_name: str, act_pos: tuple[int,int]):
+        print(action_name)
         my_turn = self.board.is_my_turn(self.local_characters)
         if my_turn:
             notification = self.board.use_action(action_name, act_pos)

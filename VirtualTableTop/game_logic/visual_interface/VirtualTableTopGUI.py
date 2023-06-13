@@ -142,7 +142,8 @@ class VirtualTableTopGUI(tk.Tk):
         pass
 
     def update_character(self, character: dict):
-        pass
+        self._sidebar_char.update_char_info(character)
+        self._sidebar_char.update_action_list(character["actions"])
 
     def update_context_button(self, ):
         pass
@@ -206,6 +207,8 @@ class VirtualTableTopGUI(tk.Tk):
 
     def setBar(self):
         self._sidebar_char = CharacterSidebar(self)
+        self.update_character({"name":"arindel",'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3','ca':'14','moved_amount':'3','speed':'6',
+                               'actions': [{'name':'sword slash', 'dices':(2, 4)}]})
 
         # sidebar_char = tk.Frame(self, bg="#3B3B3B", width=200)
         self._sidebar_char.frame.pack(side="left", fill="y")
