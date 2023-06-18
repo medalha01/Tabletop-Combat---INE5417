@@ -224,14 +224,17 @@ class VirtualTableTopGUI(tk.Tk):
     def open_char_creation(self):
         CCW = CreateCharWindow()
         CCW.open_window()
+        CCW.set_interface(self.interface)
 
     def open_start_match(self):
         SMW = StartMatchWindow()
         SMW.open_window()
+        SMW.set_interface(self.interface)
 
     def open_settings_window(self):
         SW = SettingWindow()
         SW.open_window()
+        SW.set_interface(self.interface)
         # self.update_board_image()
         # self.update_board()
 

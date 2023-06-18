@@ -29,6 +29,9 @@ class AuxWindow(ABC):
     def get_window_geometry(self):
         pass
 
+    def set_interface(self, interface):
+        self.interface = interface
+
     def create_textboxes(self, window):
         # PQ VC NAO FUNCIODSUVNSVNSAU
         status = self.get_status_labels()
