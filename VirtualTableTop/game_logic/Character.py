@@ -1,6 +1,6 @@
 
 
-from Action import Action
+from  VirtualTableTop.game_logic.Action import Action
 
 
 class Character:

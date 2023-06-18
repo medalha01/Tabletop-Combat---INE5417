@@ -15,6 +15,7 @@ class VirtualTableTopGUI(tk.Tk):
         super().__init__()
         self._action_selected = ""
         self.interface = interface
+        self.canvas = None
 
         self.title("Virtual Table Top")
         self.geometry("1280x720")
@@ -89,6 +90,8 @@ class VirtualTableTopGUI(tk.Tk):
         self.update_context_button(match_status)
 
     def update_board(self, characters: dict[str : dict], postions: list[list[str]]):
+        if self.canvas:
+            self.canvas.pack_forget()
 
         self.grid_width = len(postions[0])
         self.grid_height = len(postions)
@@ -145,8 +148,8 @@ class VirtualTableTopGUI(tk.Tk):
         self._sidebar_char.update_char_info(character)
         self._sidebar_char.update_action_list(character["actions"])
 
-    def update_context_button(self, ):
-        pass
+    def update_context_button(self, match_status: int):
+        self._sidebar_init.update_context_button(match_status)
 
     def on_canvas_click(self, event):
         col = int((event.x) // self.tile_size)
@@ -163,23 +166,23 @@ class VirtualTableTopGUI(tk.Tk):
 
         self.config(menu=appMenubar)
 
-        file_menu = Menu(appMenubar)
+        # file_menu = Menu(appMenubar)
         matchMenu = Menu(appMenubar)
         characterMenu = Menu(appMenubar)
         notifyMenu = Menu(appMenubar)
 
-        file_menu.add_command(
-            label="Connect",
-            command=self.interface.add_listener,
-        )
-        file_menu.add_command(
-            label="Disconnect",
-            command=lambda: self.notify_message("Something went wrong!"),
-        )
+        # file_menu.add_command(
+        #     label="Connect",
+        #     command=self.interface.add_listener,
+        # )
+        # file_menu.add_command(
+        #     label="Disconnect",
+        #     command=lambda: self.notify_message("Something went wrong!"),
+        # )
 
         matchMenu.add_command(
             label="Start Match",
-            command=self.interface.start_match,
+            command=self.open_start_match,
         )
         matchMenu.add_command(
             label="Configure Match",
@@ -200,7 +203,7 @@ class VirtualTableTopGUI(tk.Tk):
             label="Error", command=lambda: self.notify_message("Something went wrong!")
         )
 
-        appMenubar.add_cascade(label="Conectar", menu=file_menu)
+        # appMenubar.add_cascade(label="Conectar", menu=file_menu)
         appMenubar.add_cascade(label="Match", menu=matchMenu)
         appMenubar.add_cascade(label="Personagem", menu=characterMenu)
         appMenubar.add_cascade(label="Notificar", menu=notifyMenu)
@@ -223,21 +226,21 @@ class VirtualTableTopGUI(tk.Tk):
 
     def open_char_creation(self):
         CCW = CreateCharWindow()
-        CCW.open_window()
         CCW.set_interface(self.interface)
+        CCW.open_window()
 
     def open_start_match(self):
         SMW = StartMatchWindow()
-        SMW.open_window()
         SMW.set_interface(self.interface)
+        SMW.open_window()
 
     def open_settings_window(self):
         SW = SettingWindow()
-        SW.open_window()
         SW.set_interface(self.interface)
+        SW.open_window()
         # self.update_board_image()
         # self.update_board()
 
     def select_action(self, action_name=''):
         self._action_selected = action_name
-        print(f"acao {self._action_selected} selecionada")
+        print(f"Acao {self._action_selected} selecionada")

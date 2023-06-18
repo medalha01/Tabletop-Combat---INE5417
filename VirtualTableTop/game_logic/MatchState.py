@@ -12,7 +12,7 @@ class MatchState:
         for line in positions:
             aux = []
             for position in line:
-                aux.append(position.get_position.name)
+                aux.append(position.get_position().name)
             self.positions.append(aux)
     
     def set_characters(self, characters):

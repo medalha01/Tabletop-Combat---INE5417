@@ -2,7 +2,7 @@
 from VirtualTableTop.game_logic.visual_interface.VirtualTableTopGUI import (
     VirtualTableTopGUI,
 )
-from VirtualTableTop.game_logic.visual_interface.Board import (
+from VirtualTableTop.game_logic.Board import (
     Board,
 )
 import json
@@ -30,6 +30,7 @@ class InterfaceUser(PyNetgamesServerListener):
         self.has_player_char = False
         self.has_initiave = False
         self.connected = False
+        self.add_listener()
 
     def set_start(self):
         self.start = True
@@ -84,7 +85,7 @@ class InterfaceUser(PyNetgamesServerListener):
 
     def update_view(self):
         match_state = self.board.get_match_state()
-        match_status = sum([self.start, self.settings, self.has_player_char, self.has_initiave])
+        match_status = sum([self.start, self.settings, self.has_initiave])
         self.gui.update_view(match_status, match_state)
     
     def make_character(self):
@@ -107,9 +108,10 @@ class InterfaceUser(PyNetgamesServerListener):
         }
         self.server_proxy.send_move(self.match_id, payload)
 
-    def send_match_settings(self):
-        settings = self.gui.open_settings_window()
-        self.board.update_position_matrix()
+    def send_match_settings(self, settings):
+        self.board.update_position_matrix(settings["board_size"], settings["board_size"])
+        self.gui.update_board_image(settings["filename"])
+        self.gui.update_board({}, settings["board_size"]*[settings["board_size"]*['']])
         payload = {
             "message_type" : "settings",
             "content" : settings
@@ -135,8 +137,7 @@ class InterfaceUser(PyNetgamesServerListener):
         if my_char:
             self.add_as_controllable_character(char)
         
-    def start_match(self):
-        is_master, number_of_players = self.gui.open_start_match()
+    def start_match(self, is_master, number_of_players):
         if is_master:
             self.master = True
 
@@ -166,17 +167,21 @@ class InterfaceUser(PyNetgamesServerListener):
     def receive_disconnect(self):
         self.reset()
         answer = messagebox.askquestion('Disconnection From Server', 'Do you want to reconnect?', icon='warning')
-        if answer:
-            self.server_proxy.send_connect()
+        print(answer)
+        if answer == 'yes':
+            self.send_connect()
         else:
+            self.gui.destroy()
             exit()
 
     def receive_error(self, error):
         self.reset()
         answer = messagebox.askquestion('Disconnection Error', 'Do you want to reconnect?', icon='warning')
-        if answer:
-            self.server_proxy.send_connect()
+        print(answer)
+        if answer == 'yes':
+            self.send_connect()
         else:
+            self.gui.destroy()
             exit()
 
     def receive_match(self, match):
@@ -185,6 +190,32 @@ class InterfaceUser(PyNetgamesServerListener):
         print("Match received")
         print("Order", match.position)
         print("Id", match.match_id)
+        self.gui.update_context_button(1)
+        if self.master:
+            self.gui.open_settings_window()
 
     def receive_move(self, move):
-        pass
+        message = move.payload["message_type"]
+        content = move.payload["content"]
+        if message == 'settings':
+            self.board.update_position_matrix(content["board_size"], content["board_size"])
+            self.gui.update_board_image(content["filename"])
+            self.gui.update_board({}, content["board_size"]*[content["board_size"]*['']])
+        elif message == 'character':
+            self.create_character(content, False)
+        elif message == 'start':
+            self.set_start()
+        elif message == 'initiative':
+            self.board.set_initiative_queue(content)
+            self.set_initiative()
+        elif message == 'move_char':
+            self.board.move_character(*content)
+        elif message == 'attack':
+            self.board.receive_attack(*content)
+        elif message == 'heal':
+            self.board.receive_heal(*content)
+        elif message == 'skip_turn':
+            self.board.set_next_turn()
+        
+        self.update_view()
+

@@ -6,7 +6,6 @@ import tkinter as tk
 class CharacterSidebar(Widget):
     def __init__(self, window) -> None:
         super().__init__(window)
-        self._window = window
         # Character Info
 
         self._character_info = tk.Frame(self.frame, bg="#3B3B3B", width=300, padx=10, )

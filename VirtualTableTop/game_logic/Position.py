@@ -1,6 +1,6 @@
 
 
-from Character import Character
+from  VirtualTableTop.game_logic.Character import Character
 
 
 class Position:

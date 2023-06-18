@@ -36,7 +36,7 @@ class InitiativeSidebar(Widget):
             bg="orange",
             fg="white",
             font=font.Font(weight="bold"),
-            command=window.interface.send_match_settings,
+            command=window.open_start_match,
         )
         # Pack the button at the bottom left
         self.__startMatchButton.pack(side=tk.RIGHT, anchor=tk.SW)
@@ -50,3 +50,13 @@ class InitiativeSidebar(Widget):
             char = characters[name]
             upd_text = f"LV.{char['level']} {char['name']}, HP: {char['hp']}/{char['hp_max']} Initiative: {char['initiative']}"
             self._character_listbox.insert(tk.END, upd_text)
+
+    def update_context_button(self, match_status: int):
+        if match_status == 0:
+            self.__startMatchButton.config(text="Start Match", command=self.window.open_start_match)
+        elif match_status == 1:
+            self.__startMatchButton.config(text="Configure Match", command=self.window.open_settings_window)
+        elif match_status == 2:
+            self.__startMatchButton.config(text="Calculate Initiative", command=self.window.interface.send_iniciative)
+        elif match_status == 3:
+            self.__startMatchButton.config(text="Skip Turn", command=self.window.interface.skip_turn)

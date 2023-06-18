@@ -1,9 +1,9 @@
 
 
-from Position import Position
-from Character import Character
-from Queue import Queue
-from MatchState import MatchState
+from VirtualTableTop.game_logic.Position import Position
+from VirtualTableTop.game_logic.Character import Character
+from  VirtualTableTop.game_logic.Queue import Queue
+from VirtualTableTop.game_logic.MatchState import MatchState
 from random import randint
 
 
@@ -73,12 +73,14 @@ class Board:
             initiative_list.append((x, char.name))
         
         initiative_list.sort()
+        initiative_queue = []
         for char in initiative_list:
             self.initiative_queue.push(self.characters[char[1]])
+            initiative_queue.append(char[1])
         
         payload = {
             "message_type" : "initiative",
-            "content" : initiative_list
+            "content" : initiative_queue
         }
         
         return payload
@@ -125,6 +127,10 @@ class Board:
             if (mov_amount + dist) <= speed:
                 self.move_character(pos_cord, dist)
                 notification["message"] = ""
+                notification["payload"] = {
+                    "message_type" : "move_char",
+                    "content" : [pos_cord, dist]
+                }
             else:
                 notification["message"] = "Position too far from character"
         else:

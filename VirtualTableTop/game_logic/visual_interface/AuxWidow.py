@@ -12,16 +12,16 @@ class AuxWindow(ABC):
         self.textbox_entries = {}
 
     def open_window(self):
-        window = tk.Toplevel()
-        self.set_window_properties(window)
-        self.create_textboxes(window)
-        self.create_retrieve_button(window)
-        return window
+        self.window = tk.Toplevel()
+        self.set_window_properties()
+        self.create_textboxes()
+        self.create_retrieve_button()
+        return self.window
 
-    def set_window_properties(self, window):
-        window.title(self.get_window_title())
-        window.geometry(self.get_window_geometry())
-        return window
+    def set_window_properties(self):
+        self.window.title(self.get_window_title())
+        self.window.geometry(self.get_window_geometry())
+        return self.window
 
     def get_window_title(self):
         pass
@@ -32,11 +32,10 @@ class AuxWindow(ABC):
     def set_interface(self, interface):
         self.interface = interface
 
-    def create_textboxes(self, window):
-        # PQ VC NAO FUNCIODSUVNSVNSAU
+    def create_textboxes(self):
         status = self.get_status_labels()
         for i, label in enumerate(status):
-            label_frame = tk.Frame(window, bg="#3B3B3B", padx=5, pady=5)
+            label_frame = tk.Frame(self.window, bg="#3B3B3B", padx=5, pady=5)
             label_frame.pack(side="top", fill="x", padx=10, expand=True)  # ???
 
             textbox_label = tk.Label(
@@ -55,17 +54,17 @@ class AuxWindow(ABC):
 
 
             self.textbox_entries[label] = textbox
-            window.configure(bg=textbox_label["bg"])
+            self.window.configure(bg=textbox_label["bg"])
 
-    def create_retrieve_button(self, window):
+    def create_retrieve_button(self):
         # Create the retrieve button in the window
-        button_frame = tk.Frame(window, bg="#3B3B3B", padx=5, pady=5)
+        button_frame = tk.Frame(self.window, bg="#3B3B3B", padx=5, pady=5)
         button_frame.pack(side="top", fill="x")
 
         retrieve_button = tk.Button(
             button_frame,
             text="Retrieve Values",
-            command=lambda: self.retrieve_values(window),
+            command=lambda: self.retrieve_values(),
         )
         retrieve_button.pack(side="bottom", pady=10)
 
