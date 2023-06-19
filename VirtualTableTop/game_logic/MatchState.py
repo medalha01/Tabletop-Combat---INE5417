@@ -12,16 +12,19 @@ class MatchState:
         for line in positions:
             aux = []
             for position in line:
-                aux.append(position.get_position().name)
+                char = position.get_position()
+                name = '' if char == None else char.name
+                aux.append(name)
             self.positions.append(aux)
     
     def set_characters(self, characters):
-        for character in characters:
+        for character in characters.values():
             char_dict = character.get_dict()
             self.characters[char_dict["name"]] = char_dict
     
     def set_character(self, character):
-        self.character = character.get_dict()
+        if character != None:
+            self.character = character.get_dict()
     
     def set_initiative_queue(self, queue):
         for char in queue:

@@ -32,7 +32,7 @@ class InitiativeSidebar(Widget):
 
         self.__startMatchButton = tk.Button(
             self.frame,
-            text="Start Game",
+            text="Start Match",
             bg="orange",
             fg="white",
             font=font.Font(weight="bold"),
@@ -44,12 +44,14 @@ class InitiativeSidebar(Widget):
     def update_char_info(self, characters: dict[str : dict], initiative_queue: list[str] ):
         # Clear the listbox first
         self._character_listbox.delete(0, tk.END)
-
+        initiative_queue.reverse()
         # Add the characters to the listbox
-        for name in initiative_queue:
+        for i, name in enumerate(initiative_queue):
             char = characters[name]
             upd_text = f"LV.{char['level']} {char['name']}, HP: {char['hp']}/{char['hp_max']} Initiative: {char['initiative']}"
             self._character_listbox.insert(tk.END, upd_text)
+            self._character_listbox.itemconfig(i, {'fg': char['color']})
+
 
     def update_context_button(self, match_status: int):
         if match_status == 0:

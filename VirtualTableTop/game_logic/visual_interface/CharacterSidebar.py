@@ -7,7 +7,7 @@ class CharacterSidebar(Widget):
     def __init__(self, window) -> None:
         super().__init__(window)
         # Character Info
-
+        self._action_list = []
         self._character_info = tk.Frame(self.frame, bg="#3B3B3B", width=300, padx=10, )
         self._character_info.pack(side="top")
 
@@ -46,12 +46,14 @@ class CharacterSidebar(Widget):
         self._action_scrollbar.config(command=self._action_sidebar.yview)
         self._action_sidebar.config(yscrollcommand=self._action_scrollbar.set)
 
-    def update_action_list(self, action_list):
+    def update_action_list(self, actions):
+        for action in self._action_list:
+            action.pack_forget()
         self._action_list = []
-        for action in action_list:
+        for action in actions:
             action_widget = tk.Label(self._action, text=f"{action['name']}\n{action['dices'][0]}d{action['dices'][1]}", 
                                                   font=("arial", 14),bg="#3B3B3B", fg="#e3e3e3",highlightcolor="#e3e3e3", highlightthickness=1)
-            action_widget.bind("<Button-1>", lambda event, action=action['name']: self._window.select_action(action))
+            action_widget.bind("<Button-1>", lambda event, action=action['name']: self.window.select_action(action))
             action_widget.pack(anchor='nw', fill='x')
             self._action_list.append(action_widget)
 

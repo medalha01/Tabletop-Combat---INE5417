@@ -8,7 +8,7 @@ class Position:
         self.character : Character = None
     
     def get_position(self):
-        self.character
+        return self.character
 
     def set_position(self, char: Character):
         self.character = char

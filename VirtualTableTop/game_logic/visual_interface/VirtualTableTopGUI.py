@@ -26,7 +26,7 @@ class VirtualTableTopGUI(tk.Tk):
         #     os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"), 32
         # )
         self.update_board_image(os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"))
-        self.update_board({}, [['','','','1',''],['2','','','3',''],['','','3','',''], ['','','3','',''], ['','','3','','']])
+        # self.update_board({}, [['','','','1',''],['2','','','3',''],['','','3','',''], ['','','3','',''], ['','','3','','']])
         self.textbox_entries = {}
         self.isWindowOpen = False
 
@@ -80,12 +80,15 @@ class VirtualTableTopGUI(tk.Tk):
         self.image_file_name = file_name
 
     def update_view(self, match_status: int, match_state: MatchState):
+        print(match_state.characters)
+        print(match_state.positions)
 
-        self.update_board(match_state.characters, match_state.postions)
+        self.update_board(match_state.characters, match_state.positions)
 
         self.update_initiative(match_state.characters, match_state.initiative_queue)
 
-        self.update_character(match_state.character)
+        if match_state.character:
+            self.update_character(match_state.character)
 
         self.update_context_button(match_status)
 
@@ -125,12 +128,15 @@ class VirtualTableTopGUI(tk.Tk):
                 tile = self.canvas.create_rectangle(
                     x1, y1, x2, y2, fill="", outline="black"
                 )
-                if postions[row][col] != '':
-                    color = f"#{random.randint(0, 0xFFFFFF):06x}"
+                name = postions[row][col]
+                if name != '':
+                    # color = f"#{random.randint(0, 0xFFFFFF):06x}"
+                    color = characters[name]["color"]
                     self.canvas.itemconfig(tile, fill=color)
+
                 tile_row.append(tile)
-            self.tiles.append(tile_row)
-        # self.canvas.bind("<Button-1>", self.on_canvas_click)
+            self.tiles.append(tile_row)         
+        self.canvas.bind("<Button-1>", self.on_canvas_click)
 
         self._y_canvas_scrollbar = tk.Scrollbar(self.canvas)
         self._y_canvas_scrollbar.pack(side="right", fill="y")
@@ -189,7 +195,7 @@ class VirtualTableTopGUI(tk.Tk):
             command=lambda: self.interface.send_match_settings,
         )
 
-        characterMenu.add_command(label="Make Character", command=self.interface.make_character)
+        characterMenu.add_command(label="Make Character", command=self.open_char_creation)
         characterMenu.add_command(
             label="Save Character",
             command=lambda: self.notify_message("Something went wrong!"),
@@ -210,14 +216,14 @@ class VirtualTableTopGUI(tk.Tk):
 
     def setBar(self):
         self._sidebar_char = CharacterSidebar(self)
-        self.update_character({"name":"arindel",'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3','ca':'14','moved_amount':'3','speed':'6',
-                               'actions': [{'name':'sword slash', 'dices':(2, 4)},{'name':'heal', 'dices':(1, 4)}]})
+        # self.update_character({"name":"arindel",'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3','ca':'14','moved_amount':'3','speed':'6',
+        #                        'actions': [{'name':'sword slash', 'dices':(2, 4)},{'name':'heal', 'dices':(1, 4)}]})
 
         # sidebar_char = tk.Frame(self, bg="#3B3B3B", width=200)
         self._sidebar_char.frame.pack(side="left", fill="y")
 
         self._sidebar_init = InitiativeSidebar(self)
-        self.update_initiative({'troy':{'name':'troy', 'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3'}}, ['troy']*2)
+        # self.update_initiative({'troy':{'name':'troy', 'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3'}}, ['troy']*2)
 
         self._sidebar_init.frame.pack(side="right", fill="both")
 

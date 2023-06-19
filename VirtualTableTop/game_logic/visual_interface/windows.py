@@ -7,25 +7,34 @@ class CreateCharWindow(AuxWindow):
         return "Character Creation"
 
     def get_window_geometry(self):
-        return "300x300"
+        return "400x500"
 
     def get_status_labels(self):
-        return ["Name", "Level", "HP", "Initiative", "CA", "Speed"]
+        return ["Name", "Color", "Position", "Level", "HP", "Initiative", "CA", "Speed"]
 
     def open_window(self):
-        window = tk.Toplevel()
-        self.set_window_properties(window)
-        self.create_textboxes(window)
-        self.create_retrieve_button(window)
-        self.create_window_button(window)
+        self.textbox_entries["actions"] = []
+        self.window = tk.Toplevel()
+        self.set_window_properties()
+        self.create_textboxes()
+        self.create_window_button()
+        self.create_retrieve_button()
 
-    def create_window_button(self, parent_window):
-        button = tk.Button(parent_window, text="Add Actions", command=self.create_action_window)
+    def create_window_button(self, ):
+        button = tk.Button(self.window, text="Add Actions", command=self.create_action_window)
         button.pack()
 
     def create_action_window(self):
         window = CreateAction()
-        window.run_window()
+        window.run_window(self)
+    
+    def retrieve_values(self):
+        char = {"name": self.textbox_entries["Name"].get(), "color": self.textbox_entries["Color"].get(), "position": tuple(map(int, self.textbox_entries["Position"].get().split(','))), 
+                "level": self.textbox_entries["Level"].get(), "hp_max": int(self.textbox_entries["HP"].get()), 
+                "initiative": int(self.textbox_entries["Initiative"].get()), "ca": int(self.textbox_entries["CA"].get()), 
+                "speed": float(self.textbox_entries["Speed"].get()), "actions": self.textbox_entries["actions"]}
+        self.interface.make_character(char)
+        self.window.destroy()
 
 class SettingWindow(AuxWindow):
     def get_window_title(self):
@@ -59,7 +68,7 @@ class SettingWindow(AuxWindow):
         self.set_window_properties()
         self.create_textboxes()
         self.create_retrieve_button()
-        self.create_checkbox()
+        # self.create_checkbox()
 
     def get_values(self):
         return self.textbox_entries
@@ -75,16 +84,26 @@ class CreateAction(AuxWindow):
         return "Create Action Window"
 
     def get_window_geometry(self):
-        return "300x300"
+        return "400x500"
 
     def get_status_labels(self):
-        return ["Name", "Description", "Damage", "Type", "Range", "Number of Uses"]
+        return ["Name", "Type", "Dices", "Roll Bonus", "Damage Bonus", "Range", "Area of Effect", "Number of Uses"]
 
-    def run_window(self):
-        window = tk.Toplevel()
-        self.set_window_properties(window)
-        self.create_textboxes(window)
-        self.create_retrieve_button(window)
+    def run_window(self, char_wind):
+        self.char_wind = char_wind
+        self.window = tk.Toplevel()
+        self.set_window_properties()
+        self.create_textboxes()
+        self.create_retrieve_button()
+    
+    def retrieve_values(self):
+        action = {"name": self.textbox_entries["Name"].get(), "type": self.textbox_entries["Type"].get(), 
+                  "dices": list(map(int, self.textbox_entries["Dices"].get().split(','))), "roll_bonus": int(self.textbox_entries["Roll Bonus"].get()), 
+                  "dmg_bonus": int(self.textbox_entries["Damage Bonus"].get()), "range": int(self.textbox_entries["Range"].get()), 
+                  "aoe_radius": int(self.textbox_entries["Area of Effect"].get()), "max_amount": int(self.textbox_entries["Number of Uses"].get())}
+        self.char_wind.textbox_entries["actions"].append(action)
+        self.window.destroy()
+        
 
 
 class StartMatchWindow(AuxWindow):

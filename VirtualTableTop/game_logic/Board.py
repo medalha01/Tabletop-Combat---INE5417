@@ -10,7 +10,7 @@ from random import randint
 class Board:
     def __init__(self) -> None:
         self.positions : list[list[Position]]
-        self.characters : dict[str : Character] = []
+        self.characters : dict[str : Character] = {}
         self.initiative_queue : Queue = Queue()
         self.game_over : bool = False
     
@@ -45,7 +45,8 @@ class Board:
         return False
     
     def update_position_matrix(self, lentgh : int, height : int):
-        self.positions = height * [lentgh * [Position()]]
+        self.positions =  [[Position() for i in range(lentgh)] for i in range(height)]
+        print(self.positions)
     
     def set_initiative_queue(self, initiative_queue: list[str]):
         for char in initiative_queue:
@@ -56,31 +57,31 @@ class Board:
         current_char.reset_turn_attributes()
         self.initiative_queue.push(current_char)
     
-    def add_character(self, char: Character):
-        self.characters[char.name] = char
-    
     def create_character(self, char_info: dict) -> Character:
         char = Character()
         char.set_attributes(char_info)
-        self.add_character(char)
+        self.characters[char.name] = char
+        char_pos = char.position
+        position = self.positions[char_pos[0]][char_pos[1]]
+        position.set_position(char)
         return char
 
     def calculate_initiative(self):
         initiative_list = []
-        for char in self.characters:
+        for char in self.characters.values():
             x = randint(1,20)
             x += char.initiative
             initiative_list.append((x, char.name))
         
         initiative_list.sort()
-        initiative_queue = []
+        init_queue_payload = []
         for char in initiative_list:
             self.initiative_queue.push(self.characters[char[1]])
-            initiative_queue.append(char[1])
+            init_queue_payload.append(char[1])
         
         payload = {
             "message_type" : "initiative",
-            "content" : initiative_queue
+            "content" : init_queue_payload
         }
         
         return payload

@@ -13,6 +13,7 @@ from py_netgames_client.tkinter_client.PyNetgamesServerProxy import (
     PyNetgamesServerProxy,
 )
 from tkinter import messagebox
+import os
 
 
 class InterfaceUser(PyNetgamesServerListener):
@@ -42,13 +43,17 @@ class InterfaceUser(PyNetgamesServerListener):
         self.has_player_char = False
         self.has_initiave = False
         self.board = Board()
+        self.local_characters = []
     
     def set_initiative(self):
         self.has_initiave = True
 
     def save_character(self, filepath):
-        with open(filepath) as json_file:
-            json_file.write(json.dumps(self.local_characters))
+       '''
+        for Schar in self.local_characters:
+            with open(filepath) as json_file:
+                json_file.write(json.dumps(Schar.get_dict()))
+        '''
 
     def add_as_controllable_character(self, character):
         self.local_characters.append(character)
@@ -75,32 +80,36 @@ class InterfaceUser(PyNetgamesServerListener):
                 self.gui.notify_message(notification["message"])
     
     def skip_turn(self):
-        self.board.set_next_turn()
-        payload = {
-            "message_type": "skip_turn", 
-            "content": True
-        }
-        self.server_proxy.send_move(self.match_id, payload)
-        self.update_view()
+        my_turn = self.board.is_my_turn(self.local_characters)
+        if my_turn and self.has_initiave:
+            self.board.set_next_turn()
+            payload = {
+                "message_type": "skip_turn", 
+                "content": True
+            }
+            self.server_proxy.send_move(self.match_id, payload)
+            self.update_view()
 
     def update_view(self):
         match_state = self.board.get_match_state()
-        match_status = sum([self.start, self.settings, self.has_initiave])
+        match_status = sum([self.settings, self.has_initiave])+1 if self.master else 3
         self.gui.update_view(match_status, match_state)
     
-    def make_character(self):
+    def make_character(self, char_info):
         if not(self.start or self.has_player_char):
-            char_info = self.gui.open_char_creation()
-        
-        if not self.master:
-            self.has_player_char = True
-            char_info["team"] = "pc"
+            print(f"creating char:\n{char_info}")
+            if not self.master:
+                self.has_player_char = True
+                char_info["team"] = True
+            else:
+                char_info["team"] = False
+            
+            self.create_character(char_info, True)
+            self.send_character(char_info)
+            self.update_view()
         else:
-            char_info["team"] = "npc"
-        
-        self.create_character(char_info, True)
-        self.send_character(char_info)
-    
+            messagebox.showinfo('Action not permitted', 'Players can only have one character', icon='warning')
+
     def send_character(self, char_info: dict):
         payload = {
             "message_type" : "character",
@@ -109,18 +118,24 @@ class InterfaceUser(PyNetgamesServerListener):
         self.server_proxy.send_move(self.match_id, payload)
 
     def send_match_settings(self, settings):
-        self.board.update_position_matrix(settings["board_size"], settings["board_size"])
-        self.gui.update_board_image(settings["filename"])
-        self.gui.update_board({}, settings["board_size"]*[settings["board_size"]*['']])
-        payload = {
-            "message_type" : "settings",
-            "content" : settings
-        }
-        self.server_proxy.send_move(self.match_id, payload)
+        if self.master:
+            self.board.update_position_matrix(settings["board_size"], settings["board_size"])
+            self.gui.update_board_image(settings["filename"])
+            self.gui.update_board({}, settings["board_size"]*[settings["board_size"]*['']])
+            payload = {
+                "message_type" : "settings",
+                "content" : settings
+            }
+            self.server_proxy.send_move(self.match_id, payload)
+            self.settings = True
+            self.gui.update_context_button(2)
+        else:
+            messagebox.showinfo('Action not permitted', 'Only the master can configure the match', icon='warning')
 
     def send_iniciative(self):
         amount_of_pcs = self.board.get_character_count() - len(self.local_characters)
-        if self.master and self.settings and (amount_of_pcs == self.number_of_players):
+        print(amount_of_pcs, (self.master and self.settings and (amount_of_pcs == self.number_of_players-1)))
+        if self.master and self.settings and (amount_of_pcs == self.number_of_players-1):
             self.set_start()
             payload = {
                 "message_type" : "start",
@@ -129,8 +144,10 @@ class InterfaceUser(PyNetgamesServerListener):
             self.server_proxy.send_move(self.match_id, payload)
 
             payload = self.board.calculate_initiative()
+            print(payload)
             self.set_initiative()
             self.server_proxy.send_move(self.match_id, payload)
+            self.update_view()
 
     def create_character(self, char_info: dict, my_char: bool):
         char = self.board.create_character(char_info)
@@ -140,7 +157,7 @@ class InterfaceUser(PyNetgamesServerListener):
     def start_match(self, is_master, number_of_players):
         if is_master:
             self.master = True
-
+        self.number_of_players = number_of_players
         self.server_proxy.send_match(number_of_players)
 
     def disconnect(self):
@@ -167,7 +184,6 @@ class InterfaceUser(PyNetgamesServerListener):
     def receive_disconnect(self):
         self.reset()
         answer = messagebox.askquestion('Disconnection From Server', 'Do you want to reconnect?', icon='warning')
-        print(answer)
         if answer == 'yes':
             self.send_connect()
         else:
@@ -177,7 +193,6 @@ class InterfaceUser(PyNetgamesServerListener):
     def receive_error(self, error):
         self.reset()
         answer = messagebox.askquestion('Disconnection Error', 'Do you want to reconnect?', icon='warning')
-        print(answer)
         if answer == 'yes':
             self.send_connect()
         else:
@@ -190,14 +205,17 @@ class InterfaceUser(PyNetgamesServerListener):
         print("Match received")
         print("Order", match.position)
         print("Id", match.match_id)
-        self.gui.update_context_button(1)
         if self.master:
+            self.gui.update_context_button(1)
             self.gui.open_settings_window()
+        else:
+            self.gui.update_context_button(3)
 
     def receive_move(self, move):
         message = move.payload["message_type"]
         content = move.payload["content"]
         if message == 'settings':
+            self.settings = True
             self.board.update_position_matrix(content["board_size"], content["board_size"])
             self.gui.update_board_image(content["filename"])
             self.gui.update_board({}, content["board_size"]*[content["board_size"]*['']])

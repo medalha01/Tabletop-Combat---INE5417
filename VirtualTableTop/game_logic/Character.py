@@ -7,8 +7,9 @@ class Character:
     def __init__(self):
         self.pc : bool
         self.name : str
+        self.color : str
         self.position : tuple[int, int]
-        self.level : int
+        self.level : str
         self.hp_max : int
         self.initiative : int
         self.ca : int
@@ -20,21 +21,22 @@ class Character:
         self.actions_used : int
 
     def set_attributes(self, attributes : dict):
-        self.pc = attributes["pc"]
+        self.pc = attributes["team"]
         self.name = attributes["name"]
+        self.color = attributes["color"]
         self.position = attributes["position"]
         self.level = attributes["level"]
         self.hp_max = attributes["hp_max"]
         self.initiative = attributes["initiative"]
         self.ca = attributes["ca"]
         self.speed = attributes["speed"]
-        self.actions = attributes["actions"]
         self.hp = self.hp_max
-        self.actions_amount = attributes["actions_amount"]
+        self.actions_amount = attributes.get("actions_amount", 1)
         self.moved_amount = 0
         self.actions_used = 0
-
+        self.actions = {}
         for action in attributes["actions"]:
+            print(action)
             self.list_action(action)
 
     def set_position(self, position: tuple[int,int]):
@@ -69,6 +71,7 @@ class Character:
         char_dict = {}
         char_dict["pc"] = self.pc
         char_dict["name"] = self.name
+        char_dict["color"] = self.color
         char_dict["position"] = self.position
         char_dict["level"] = self.level
         char_dict["hp_max"] = self.hp_max
@@ -80,7 +83,7 @@ class Character:
         char_dict["moved_amount"] = self.moved_amount
         char_dict["actions_used"] = self.actions_used
         char_dict["actions"] = []
-        for action in self.actions():
+        for action in self.actions.values():
             char_dict["actions"].append(action.get_dict())
         return char_dict
 
