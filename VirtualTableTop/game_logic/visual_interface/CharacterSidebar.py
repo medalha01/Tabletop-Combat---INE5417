@@ -30,7 +30,7 @@ class CharacterSidebar(Widget):
         self._text_name.pack(side="top")
         self._text_att.pack(side="top", anchor="w")
 
-        # Actions Sidebar
+        # Action Sidebar
         self._action_disselect_button = tk.Button(self.frame, text='Disselect Action', command=window.select_action)
         self._action_disselect_button.pack(anchor='n', fill='x')
 

@@ -3,7 +3,7 @@ from abc import ABC
 
 
 class AuxWindow(ABC):
-    def __init__(self, window) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self.__values = None
         self.checkbox_value = None
@@ -23,6 +23,9 @@ class AuxWindow(ABC):
         self.window.geometry(self.get_window_geometry())
         return self.window
 
+    def get_status_labels(self):
+        pass
+    
     def get_window_title(self):
         pass
 

@@ -105,7 +105,7 @@ class InterfaceUser(PyNetgamesServerListener):
         self.gui.update_view(match_status, match_state)
     
     def make_character(self, char_info):
-        if not(self.start or self.has_player_char):
+        if not(self.start or self.has_player_char) and self.settings:
             print(f"creating char:\n{char_info}")
             if not self.master:
                 self.has_player_char = True
@@ -117,6 +117,8 @@ class InterfaceUser(PyNetgamesServerListener):
             self.send_character(char_info)
             self.update_view()
         else:
+            if not self.settings:
+                messagebox.showinfo('Action not permitted', 'Match not configured', icon='warning')
             if self.start:
                 messagebox.showinfo('Action not permitted', 'Combat already started', icon='warning')
             else:
