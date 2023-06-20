@@ -87,7 +87,7 @@ class CreateAction(AuxWindow):
         return "400x500"
 
     def get_status_labels(self):
-        return ["Name", "Type", "Dices", "Roll Bonus", "Damage Bonus", "Range", "Area of Effect", "Number of Uses"]
+        return ["Name", "Type", "Dices", "Roll\nBonus", "Effect\nBonus", "Range", "Area of\nEffect", "Number of\nUses"]
 
     def run_window(self, char_wind):
         self.char_wind = char_wind
@@ -98,9 +98,9 @@ class CreateAction(AuxWindow):
     
     def retrieve_values(self):
         action = {"name": self.textbox_entries["Name"].get(), "type": self.textbox_entries["Type"].get(), 
-                  "dices": list(map(int, self.textbox_entries["Dices"].get().split(','))), "roll_bonus": int(self.textbox_entries["Roll Bonus"].get()), 
-                  "dmg_bonus": int(self.textbox_entries["Damage Bonus"].get()), "range": int(self.textbox_entries["Range"].get()), 
-                  "aoe_radius": int(self.textbox_entries["Area of Effect"].get()), "max_amount": int(self.textbox_entries["Number of Uses"].get())}
+                  "dices": list(map(int, self.textbox_entries["Dices"].get().split(','))), "roll_bonus": int(self.textbox_entries["Roll\nBonus"].get()), 
+                  "dmg_bonus": int(self.textbox_entries["Effect\nBonus"].get()), "range": float(self.textbox_entries["Range"].get()), 
+                  "aoe_radius": int(self.textbox_entries["Area of\nEffect"].get()), "max_amount": int(self.textbox_entries["Number of\nUses"].get())}
         self.char_wind.textbox_entries["actions"].append(action)
         self.window.destroy()
         

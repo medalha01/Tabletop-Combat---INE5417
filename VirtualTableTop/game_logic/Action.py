@@ -10,7 +10,7 @@ class Action:
         self.dices :list[int]
         self.roll_bonus : int
         self.dmg_bonus : int
-        self.range : int
+        self.range : float
         self.aoe_radius : int
         self.max_amount : int
         self.times_used : int
@@ -66,5 +66,5 @@ class Action:
         return amount
 
     def calculate_roll(self) -> int:
-        return randint(1,20) + self.roll_bonus
+        return (randint(1,20) + self.roll_bonus)
 

@@ -99,8 +99,11 @@ class Character:
     
     def receive_attack(self, roll : int, dmg : int) -> bool:
         if roll > self.ca:
+            print(f"{self.name} hit with {dmg} points of damage")
             self.hp -= dmg
+            print(f"HP: {self.hp}")
             if self.hp <= 0:
+                print(f"{self.name} died")
                 return True
         return False
 
@@ -110,6 +113,7 @@ class Character:
             self.hp = self.hp_max
 
     def is_dead(self) -> bool:
-        if self.hp <= 0: return True
+        if self.hp <= 0: 
+            return True
         return False
 

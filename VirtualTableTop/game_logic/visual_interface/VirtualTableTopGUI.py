@@ -21,60 +21,11 @@ class VirtualTableTopGUI(tk.Tk):
         self.geometry("1280x720")
         self.setMenu()
         self.setBar()
-        # VirtualTableTop/game_logic/visual_interface/
-        # self.setCanvas(
-        #     os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"), 32
-        # )
-        self.update_board_image(os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"))
-        # self.update_board({}, [['','','','1',''],['2','','','3',''],['','','3','',''], ['','','3','',''], ['','','3','','']])
+
+        # self.update_board_image(os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"))
+
         self.textbox_entries = {}
         self.isWindowOpen = False
-
-    def setCanvas(self, backgroundImageName, tileSize):
-        self.tile_size = tileSize
-        self.grid_width = 100  # image.width // self.tile_size
-        self.grid_height = 100  # image.height // self.tile_size
-        image = Image.open(backgroundImageName)
-        image = image.resize((tileSize, tileSize), Image.ANTIALIAS)
-        background_image = ImageTk.PhotoImage(image)
-        self.img = background_image
-        self.canvas = tk.Canvas(
-            self,
-            bg="#F7F7F7",  # width=800, height=600,
-            scrollregion=(
-                0,
-                0,
-                tileSize * self.grid_width + 20,
-                tileSize * self.grid_height + 20,
-            ),
-        )
-        self.canvas.pack(side="right", fill="both", expand=True)
-
-        self.canvas.create_image(0, 0, anchor="nw", image=self.img)
-        self.tiles = []
-        for row in range(self.grid_height):
-            tile_row = []
-            for col in range(self.grid_width):
-                x1 = col * self.tile_size
-                y1 = row * self.tile_size
-                x2 = x1 + self.tile_size
-                y2 = y1 + self.tile_size
-                self.canvas.create_image(x1, y1, anchor="nw", image=self.img)
-                tile = self.canvas.create_rectangle(
-                    x1, y1, x2, y2, fill="", outline="black"
-                )
-                tile_row.append(tile)
-            self.tiles.append(tile_row)
-        self.canvas.bind("<Button-1>", self.on_canvas_click)
-
-        self._y_canvas_scrollbar = tk.Scrollbar(self.canvas)
-        self._y_canvas_scrollbar.pack(side="right", fill="y")
-        self._y_canvas_scrollbar.config(command=self.canvas.yview)
-        self.canvas.config(yscrollcommand=self._y_canvas_scrollbar.set)
-        self._x_canvas_scrollbar = tk.Scrollbar(self.canvas, orient="horizontal")
-        self._x_canvas_scrollbar.pack(side="bottom", fill="x")
-        self._x_canvas_scrollbar.config(command=self.canvas.xview)
-        self.canvas.config(xscrollcommand=self._x_canvas_scrollbar.set)
 
     def update_board_image(self, file_name):
         self.image_file_name = file_name
@@ -161,11 +112,17 @@ class VirtualTableTopGUI(tk.Tk):
         col = int((event.x) // self.tile_size)
         row = int((event.y) // self.tile_size)
         tile = self.tiles[row][col]
-        color = f"#{random.randint(0, 0xFFFFFF):06x}"
-        if self.canvas.itemcget(tile, "fill") == "":
-            self.canvas.itemconfig(tile, fill=color)
+
+        if self._action_selected == '':
+            self.interface.position_click((row,col))
         else:
-            self.canvas.itemconfig(tile, fill="")
+            self.interface.action_click(self._action_selected, (row,col))
+
+        # color = f"#{random.randint(0, 0xFFFFFF):06x}"
+        # if self.canvas.itemcget(tile, "fill") == "":
+        #     self.canvas.itemconfig(tile, fill=color)
+        # else:
+        #     self.canvas.itemconfig(tile, fill="")
 
     def setMenu(self):
         appMenubar = Menu(self)
@@ -175,7 +132,7 @@ class VirtualTableTopGUI(tk.Tk):
         # file_menu = Menu(appMenubar)
         matchMenu = Menu(appMenubar)
         characterMenu = Menu(appMenubar)
-        notifyMenu = Menu(appMenubar)
+        # notifyMenu = Menu(appMenubar)
 
         # file_menu.add_command(
         #     label="Connect",
@@ -198,33 +155,27 @@ class VirtualTableTopGUI(tk.Tk):
         characterMenu.add_command(label="Make Character", command=self.open_char_creation)
         characterMenu.add_command(
             label="Save Character",
-            command=lambda: self.notify_message("Something went wrong!"),
+            command=lambda: self.interface.save_character(''),
         )
         characterMenu.add_command(
             label="Load Character",
             command=lambda: self.notify_message("Something went wrong!"),
         )
 
-        notifyMenu.add_command(
-            label="Error", command=lambda: self.notify_message("Something went wrong!")
-        )
+        # notifyMenu.add_command(
+        #     label="Error", command=lambda: self.notify_message("Something went wrong!")
+        # )
 
         # appMenubar.add_cascade(label="Conectar", menu=file_menu)
         appMenubar.add_cascade(label="Match", menu=matchMenu)
         appMenubar.add_cascade(label="Personagem", menu=characterMenu)
-        appMenubar.add_cascade(label="Notificar", menu=notifyMenu)
+        # appMenubar.add_cascade(label="Notificar", menu=notifyMenu)
 
     def setBar(self):
         self._sidebar_char = CharacterSidebar(self)
-        # self.update_character({"name":"arindel",'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3','ca':'14','moved_amount':'3','speed':'6',
-        #                        'actions': [{'name':'sword slash', 'dices':(2, 4)},{'name':'heal', 'dices':(1, 4)}]})
-
-        # sidebar_char = tk.Frame(self, bg="#3B3B3B", width=200)
         self._sidebar_char.frame.pack(side="left", fill="y")
 
         self._sidebar_init = InitiativeSidebar(self)
-        # self.update_initiative({'troy':{'name':'troy', 'level':'10', 'hp':'100', 'hp_max':'120', 'initiative':'3'}}, ['troy']*2)
-
         self._sidebar_init.frame.pack(side="right", fill="both")
 
     def notify_message(self, mensagem):
@@ -244,8 +195,6 @@ class VirtualTableTopGUI(tk.Tk):
         SW = SettingWindow()
         SW.set_interface(self.interface)
         SW.open_window()
-        # self.update_board_image()
-        # self.update_board()
 
     def select_action(self, action_name=''):
         self._action_selected = action_name

@@ -33,13 +33,14 @@ class Board:
     
     def check_for_gameover(self):
         pc, npc, dead_pc, dead_npc = 0, 0, 0, 0
-        for char in self.characters:
-            if char.get_pc: 
+        for char in self.characters.values():
+            if char.get_pc(): 
                 pc+=1
                 if char.is_dead(): dead_pc +=1
             else: 
                 npc+=1
                 if char.is_dead(): dead_npc +=1
+        print(pc, dead_pc, npc, dead_npc)
         if (npc == dead_npc) or (pc == dead_pc):
             return True
         return False
@@ -74,6 +75,8 @@ class Board:
             initiative_list.append((x, char.name))
         
         initiative_list.sort()
+        initiative_list.reverse()
+        print(f"Iniciativa Calculada:\n{initiative_list}")
         init_queue_payload = []
         for char in initiative_list:
             self.initiative_queue.push(self.characters[char[1]])
@@ -92,16 +95,16 @@ class Board:
         dx = abs(x-x0)
         dy = abs(y-y0)
         dmax = max(dx, dy)
-        dist = dmax*1.5
+        dist = dmax * 1.5
         return dist
 
-    def calculate_affected_characters(self, attack_pos : tuple[int, int], action) -> list[Character]:
+    def calculate_affected_characters(self, attack_pos : tuple[int, int], action) -> list[str]:
         affected_characters = []
-        for char in self.characters:
+        for char in self.characters.values():
             char_pos = char.get_position()
             char_dist = self.calculate_distance(attack_pos, char_pos)
             if char_dist <= action.get_aoe():
-                affected_characters.append(char)
+                affected_characters.append(char.name)
         return affected_characters
 
     def move_character(self, position: tuple[int, int], dist : float):
@@ -142,7 +145,7 @@ class Board:
     def receive_attack(self, roll : int, damage: int, action_name: str, affected_characters: list[str]):
         character = self.initiative_queue.top()
         character.increase_actions_used()
-        action = character.get_actions(action_name)
+        action = character.get_action(action_name)
         action.increase_times_used()
 
         for name in affected_characters:
@@ -158,7 +161,7 @@ class Board:
     def receive_heal(self, roll: int, heal_amount: int, action_name: str, affected_characters: list[str]):
         character = self.initiative_queue.top()
         character.increase_actions_used()
-        action = character.get_actions(action_name)
+        action = character.get_action(action_name)
         action.increase_times_used()
 
         for name in affected_characters:
@@ -176,7 +179,7 @@ class Board:
 
         payload = {
             "message_type" : "attack",
-            "content": [roll, dmg, affected_characters]
+            "content": [roll, dmg, action_name, affected_characters]
         }
         return payload
 
@@ -199,24 +202,31 @@ class Board:
         character:Character = self.initiative_queue.top()
         act_used = character.get_actions_used()
         act_amount = character.get_action_amount()
-        payload = ""
+        notification = {}
 
         if act_used < act_amount:
             action = character.get_action(action_name)
             max_amount = action.get_max_amount()
             times_used = action.get_times_used()
 
-            if times_used < max_amount:
+            if times_used < max_amount or max_amount <= 0:
                 char_pos = character.get_position()
                 act_range = action.get_range()
                 dist = self.calculate_distance(act_pos, char_pos)
                 
                 if dist <= act_range:
                     act_type = action.get_type()
+                    notification["message"] = ""
 
                     if act_type == "attack":
-                        payload = self.make_attack(action_name, act_pos)
+                        notification["payload"] = self.make_attack(action_name, act_pos)
                     elif act_type == "heal":
-                        payload = self.make_heal(action_name, act_pos)
-        return payload
+                        notification["payload"] = self.make_heal(action_name, act_pos)
+                else:
+                    notification["message"] = "Position out of action range"
+            else:
+                notification["message"] = "Maximum use of action reached"
+        else:
+            notification["message"] = "Maximum number of actions per turn reached"
+        return notification
 

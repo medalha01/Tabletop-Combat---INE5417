@@ -48,7 +48,7 @@ class InitiativeSidebar(Widget):
         # Add the characters to the listbox
         for i, name in enumerate(initiative_queue):
             char = characters[name]
-            upd_text = f"LV.{char['level']} {char['name']}, HP: {char['hp']}/{char['hp_max']} Initiative: {char['initiative']}"
+            upd_text = f"LV.{char['level']} {char['name']} HP: {char['hp']}/{char['hp_max']}"# Initiative: {char['initiative']}"
             self._character_listbox.insert(tk.END, upd_text)
             self._character_listbox.itemconfig(i, {'fg': char['color']})
 

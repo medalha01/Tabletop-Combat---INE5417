@@ -44,6 +44,7 @@ class InterfaceUser(PyNetgamesServerListener):
         self.has_initiave = False
         self.board = Board()
         self.local_characters = []
+        self.gui.update_context_button(0)
     
     def set_initiative(self):
         self.has_initiave = True
@@ -69,7 +70,7 @@ class InterfaceUser(PyNetgamesServerListener):
                 self.gui.notify_message(notification["message"])
     
     def action_click(self, action_name: str, act_pos: tuple[int,int]):
-        print(action_name)
+        print(action_name, act_pos)
         my_turn = self.board.is_my_turn(self.local_characters)
         if my_turn:
             notification = self.board.use_action(action_name, act_pos)
@@ -78,6 +79,7 @@ class InterfaceUser(PyNetgamesServerListener):
                 self.update_view()
             else:
                 self.gui.notify_message(notification["message"])
+        self.check_game_over()
     
     def skip_turn(self):
         my_turn = self.board.is_my_turn(self.local_characters)
@@ -89,6 +91,13 @@ class InterfaceUser(PyNetgamesServerListener):
             }
             self.server_proxy.send_move(self.match_id, payload)
             self.update_view()
+
+    def check_game_over(self):
+        if self.board.game_over:
+            answer = messagebox.askquestion('Game Over', 'Do you want to save your character?', icon='warning')
+            if answer == 'yes':
+                self.save_character('')
+            self.server_proxy.send_disconnect()
 
     def update_view(self):
         match_state = self.board.get_match_state()
@@ -108,7 +117,10 @@ class InterfaceUser(PyNetgamesServerListener):
             self.send_character(char_info)
             self.update_view()
         else:
-            messagebox.showinfo('Action not permitted', 'Players can only have one character', icon='warning')
+            if self.start:
+                messagebox.showinfo('Action not permitted', 'Combat already started', icon='warning')
+            else:
+                messagebox.showinfo('Action not permitted', 'Players can only have one character', icon='warning')
 
     def send_character(self, char_info: dict):
         payload = {
@@ -230,6 +242,7 @@ class InterfaceUser(PyNetgamesServerListener):
             self.board.move_character(*content)
         elif message == 'attack':
             self.board.receive_attack(*content)
+            self.check_game_over()
         elif message == 'heal':
             self.board.receive_heal(*content)
         elif message == 'skip_turn':
