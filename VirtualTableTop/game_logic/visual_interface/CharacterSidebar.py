@@ -31,7 +31,7 @@ class CharacterSidebar(Widget):
         self._text_att.pack(side="top", anchor="w")
 
         # Action Sidebar
-        self._action_disselect_button = tk.Button(self.frame, text='Disselect Action', command=window._disselect_action)
+        self._action_disselect_button = tk.Button(self.frame, text='Disselect Action', command=self._disselect_action)
         self._action_disselect_button.pack(anchor='n', fill='x')
 
         self._action_sidebar = tk.Canvas(
@@ -63,9 +63,10 @@ class CharacterSidebar(Widget):
         self.window.select_action(widget["text"])
 
     def _disselect_action(self):
-        for action_widget in self._action_list:
-            action_widget.configure(fg="#3B3B3B")  
         self.window.select_action(None)
+        for action_widget in self._action_list:
+            action_widget.configure(bg="#3B3B3B")  
+        
 
 
     def update_char_info(self, character: dict):

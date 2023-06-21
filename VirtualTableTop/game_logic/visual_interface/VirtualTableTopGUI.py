@@ -199,3 +199,8 @@ class VirtualTableTopGUI(tk.Tk):
     def select_action(self, action_name=''):
         self._action_selected = action_name
         print(f"Acao {self._action_selected} selecionada")
+
+    def _disselect_action(self):
+        for action_widget in self._action_list:
+            action_widget.configure(fg="#3B3B3B")  
+        self.window.select_action(None)
