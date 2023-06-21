@@ -31,7 +31,7 @@ class CharacterSidebar(Widget):
         self._text_att.pack(side="top", anchor="w")
 
         # Action Sidebar
-        self._action_disselect_button = tk.Button(self.frame, text='Disselect Action', command=self._disselect_action)
+        self._action_disselect_button = tk.Button(self.frame, text='Disselect Action', command=window.select_action)
         self._action_disselect_button.pack(anchor='n', fill='x')
 
         self._action_sidebar = tk.Canvas(
@@ -52,22 +52,11 @@ class CharacterSidebar(Widget):
         self._action_list = []
         for action in actions:
             text = f"{action['name']} {action['times_used']}/{action['max_amount']}\n{len(action['dices'])}d{action['dices'][0]}\nRoll:{action['roll_bonus']}\nEffect:{action['dmg_bonus']}\nRange:{action['range']}\nAoe:{action['aoe_radius']}"
-            action_widget = tk.Label(self._action, text=text, font=("arial", 14), bg="#3B3B3B",
-                                    fg="#e3e3e3", highlightcolor="#e3e3e3", highlightthickness=1)
-            action_widget.bind("<Button-1>", lambda event, widget=action_widget: self._on_action_click(widget))
+            action_widget = tk.Label(self._action, text= text, font=("arial", 14), bg="#3B3B3B",
+                                     fg="#e3e3e3",highlightcolor="#e3e3e3", highlightthickness=1)
+            action_widget.bind("<Button-1>", lambda event, action=action['name']: self.window.select_action(action, action_widget))
             action_widget.pack(anchor='nw', fill='x')
             self._action_list.append(action_widget)
-
-    def _on_action_click(self, widget):
-        widget.configure(bg="red") 
-        self.window.select_action(widget["text"])
-
-    def _disselect_action(self):
-        self.window.select_action(None)
-        for action_widget in self._action_list:
-            action_widget.configure(bg="#3B3B3B")  
-        
-
 
     def update_char_info(self, character: dict):
         self._text_name.configure(text=character['name'])
