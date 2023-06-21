@@ -9,3 +9,5 @@ class CharAction(Widget):
         self._text = tk.Label(self.frame, text=f"{action['name']}\n{action['dices'][0]}d{action['dices'][1]}", font=("arial", 10))
         self._text.bind("<Button-1>", lambda event, t="a", p="blz?": tk.messagebox.askquestion(t,p))
         self._text.pack(side="top", anchor="w")
+
+    
