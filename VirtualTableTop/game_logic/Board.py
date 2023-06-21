@@ -100,11 +100,15 @@ class Board:
 
     def calculate_affected_characters(self, attack_pos : tuple[int, int], action) -> list[str]:
         affected_characters = []
-        for char in self.characters.values():
-            char_pos = char.get_position()
-            char_dist = self.calculate_distance(attack_pos, char_pos)
-            if char_dist <= action.get_aoe():
-                affected_characters.append(char.name)
+        if action.get_aoe() == 0:
+            char = self.positions[attack_pos[0]][attack_pos[1]].get_position()
+            affected_characters.append(char.name)
+        else:
+            for char in self.characters.values():
+                char_pos = char.get_position()
+                char_dist = self.calculate_distance(attack_pos, char_pos)
+                if char_dist <= action.get_aoe():
+                    affected_characters.append(char.name)
         return affected_characters
 
     def move_character(self, position: tuple[int, int], dist : float):
