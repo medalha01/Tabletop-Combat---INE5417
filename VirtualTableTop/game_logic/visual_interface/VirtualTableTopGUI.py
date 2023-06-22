@@ -19,8 +19,8 @@ class VirtualTableTopGUI(tk.Tk):
 
         self.title("Virtual Table Top")
         self.geometry("1280x720")
-        self.setMenu()
-        self.setBar()
+        self.set_menu()
+        self.set_bar()
 
         # self.update_board_image(os.path.join(os.path.dirname(__file__), "../assets/asset.jpg"))
 
@@ -124,7 +124,7 @@ class VirtualTableTopGUI(tk.Tk):
         # else:
         #     self.canvas.itemconfig(tile, fill="")
 
-    def setMenu(self):
+    def set_menu(self):
         appMenubar = Menu(self)
 
         self.config(menu=appMenubar)
@@ -171,7 +171,7 @@ class VirtualTableTopGUI(tk.Tk):
         appMenubar.add_cascade(label="Personagem", menu=characterMenu)
         # appMenubar.add_cascade(label="Notificar", menu=notifyMenu)
 
-    def setBar(self):
+    def set_bar(self):
         self._sidebar_char = CharacterSidebar(self)
         self._sidebar_char.frame.pack(side="left", fill="y")
 

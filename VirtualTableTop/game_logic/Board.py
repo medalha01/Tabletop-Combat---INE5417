@@ -118,8 +118,8 @@ class Board:
         init_pos.set_position(None)
         new_pos = self.positions[position[0]][position[1]]
         new_pos.set_position(char)
-        char.add_moved_amount(dist)
         char.set_position(position)
+        char.add_moved_amount(dist)
 
     def use_move(self, pos_cord: tuple[int, int]) -> dict:
         notification = {}
@@ -140,7 +140,7 @@ class Board:
                     "content" : [pos_cord, dist]
                 }
             else:
-                notification["message"] = "Position too far from character"
+                notification["message"] = "Not enough available movement"
         else:
             notification["message"] = "Position already occupied"
 

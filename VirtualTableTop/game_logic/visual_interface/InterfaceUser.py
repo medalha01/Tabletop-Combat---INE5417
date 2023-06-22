@@ -168,9 +168,8 @@ class InterfaceUser(PyNetgamesServerListener):
         if my_char:
             self.add_as_controllable_character(char)
         
-    def start_match(self, is_master, number_of_players):
-        if is_master:
-            self.master = True
+    def start_match(self, is_master: bool, number_of_players: int):
+        self.master = is_master
         self.number_of_players = number_of_players
         self.server_proxy.send_match(number_of_players)
 
