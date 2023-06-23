@@ -49,12 +49,13 @@ class InterfaceUser(PyNetgamesServerListener):
     def set_initiative(self):
         self.has_initiave = True
 
-    def save_character(self, filepath):
-       '''
-        for Schar in self.local_characters:
+    def save_character(self):
+
+        for char in self.local_characters:
+            filepath = '{}.json'.format(char.get_name())
             with open(filepath) as json_file:
-                json_file.write(json.dumps(Schar.get_dict()))
-        '''
+                json_file.write(json.dumps(char.get_dict()))
+
 
     def add_as_controllable_character(self, character):
         self.local_characters.append(character)
