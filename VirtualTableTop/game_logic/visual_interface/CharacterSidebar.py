@@ -46,7 +46,7 @@ class CharacterSidebar(Widget):
         self._action_scrollbar.config(command=self._action_sidebar.yview)
         self._action_sidebar.config(yscrollcommand=self._action_scrollbar.set)
 
-    def update_action_list(self, actions):
+    def update_action_list(self, actions: list[dict]):
         for action in self._action_list:
             action.pack_forget()
         self._action_list = []
@@ -62,5 +62,3 @@ class CharacterSidebar(Widget):
         self._text_name.configure(text=character['name'])
         upd_text = f"Level: {character['level']} \nHP: {character['hp']}/{character['hp_max']} \nInitiave: {character['initiative']} \nCA: {character['ca']} \nSpeed: {character['moved_amount']}/{character['speed']}"
         self._text_att.configure(text=upd_text)
-
-        # ...

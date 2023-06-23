@@ -30,7 +30,7 @@ class InitiativeSidebar(Widget):
         )
         self._character_listbox.pack(side="top", expand=True, fill="both")
 
-        self.__startMatchButton = tk.Button(
+        self.__context_button = tk.Button(
             self.frame,
             text="Start Match",
             bg="orange",
@@ -39,7 +39,7 @@ class InitiativeSidebar(Widget):
             command=window.open_start_match,
         )
         # Pack the button at the bottom left
-        self.__startMatchButton.pack(side=tk.RIGHT, anchor=tk.SW)
+        self.__context_button.pack(side=tk.RIGHT, anchor=tk.SW)
 
     def update_char_info(self, characters: dict[str : dict], initiative_queue: list[str] ):
         # Clear the listbox first
@@ -52,13 +52,12 @@ class InitiativeSidebar(Widget):
             self._character_listbox.insert(tk.END, upd_text)
             self._character_listbox.itemconfig(i, {'fg': char['color']})
 
-
     def update_context_button(self, match_status: int):
         if match_status == 0:
-            self.__startMatchButton.config(text="Start Match", command=self.window.open_start_match)
+            self.__context_button.config(text="Start Match", command=self.window.open_start_match)
         elif match_status == 1:
-            self.__startMatchButton.config(text="Configure Match", command=self.window.open_settings_window)
+            self.__context_button.config(text="Configure Match", command=self.window.open_settings_window)
         elif match_status == 2:
-            self.__startMatchButton.config(text="Calculate Initiative", command=self.window.interface.send_iniciative)
+            self.__context_button.config(text="Calculate Initiative", command=self.window.interface.send_initiative)
         elif match_status == 3:
-            self.__startMatchButton.config(text="Skip Turn", command=self.window.interface.skip_turn)
+            self.__context_button.config(text="Skip Turn", command=self.window.interface.skip_turn)

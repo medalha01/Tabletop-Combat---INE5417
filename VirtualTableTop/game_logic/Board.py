@@ -14,12 +14,12 @@ class Board:
         self.initiative_queue : Queue = Queue()
         self.game_over : bool = False
     
-    def get_character_count(self):
+    def get_character_count(self) -> int:
         return len(self.characters)
     
     def get_match_state(self) -> MatchState:
         match_state = MatchState()
-        match_state.set_position(self.positions)
+        match_state.set_positions(self.positions)
         match_state.set_characters(self.characters)
         match_state.set_character(self.initiative_queue.top())
         match_state.set_initiative_queue(self.initiative_queue.queue())
@@ -31,7 +31,7 @@ class Board:
                 return True
         return False
     
-    def check_for_gameover(self):
+    def check_for_gameover(self) -> bool:
         pc, npc, dead_pc, dead_npc = 0, 0, 0, 0
         for char in self.characters.values():
             if char.get_pc(): 
@@ -40,14 +40,13 @@ class Board:
             else: 
                 npc+=1
                 if char.is_dead(): dead_npc +=1
-        print(pc, dead_pc, npc, dead_npc)
+        #   print(pc, dead_pc, npc, dead_npc)
         if (npc == dead_npc) or (pc == dead_pc):
             return True
         return False
     
     def update_position_matrix(self, lentgh : int, height : int):
         self.positions =  [[Position() for i in range(lentgh)] for i in range(height)]
-        print(self.positions)
     
     def set_initiative_queue(self, initiative_queue: list[str]):
         for char in initiative_queue:
@@ -62,12 +61,11 @@ class Board:
         char = Character()
         char.set_attributes(char_info)
         self.characters[char.name] = char
-        char_pos = char.position
-        position = self.positions[char_pos[0]][char_pos[1]]
-        position.set_position(char)
+        char_pos = char.get_position()
+        self.positions[char_pos[0]][char_pos[1]].set_position(char)
         return char
 
-    def calculate_initiative(self):
+    def calculate_initiative(self) -> dict:
         initiative_list = []
         for char in self.characters.values():
             x = randint(1,20)
@@ -115,7 +113,8 @@ class Board:
         char = self.initiative_queue.top()
         init_pos = char.get_position()
         init_pos = self.positions[init_pos[0]][init_pos[1]]
-        init_pos.set_position(None)
+        if char == init_pos.get_position():
+            init_pos.set_position(None)
         new_pos = self.positions[position[0]][position[1]]
         new_pos.set_position(char)
         char.set_position(position)
@@ -156,13 +155,13 @@ class Board:
             character = self.characters[name]
             dead = character.receive_attack(roll, damage)
             if dead:
-                pos = character.get_position()
+                pos = character.get_position()  
                 self.positions[pos[0]][pos[1]].set_position(None)
                 self.initiative_queue.remove(character)
         
         self.game_over = self.check_for_gameover()
 
-    def receive_heal(self, roll: int, heal_amount: int, action_name: str, affected_characters: list[str]):
+    def receive_heal(self, heal_amount: int, action_name: str, affected_characters: list[str]):
         character = self.initiative_queue.top()
         character.increase_actions_used()
         action = character.get_action(action_name)
@@ -170,7 +169,7 @@ class Board:
 
         for name in affected_characters:
             character = self.characters[name]
-            character.receive_heal(roll, heal_amount)
+            character.receive_heal(heal_amount)
 
     def make_attack(self, action_name: str, position: tuple[int,int]) -> dict:
         character = self.initiative_queue.top()
@@ -203,7 +202,7 @@ class Board:
         return payload
 
     def use_action(self, action_name: str, act_pos: tuple[int, int]) -> dict:
-        character:Character = self.initiative_queue.top()
+        character = self.initiative_queue.top()
         act_used = character.get_actions_used()
         act_amount = character.get_action_amount()
         notification = {}
@@ -233,4 +232,3 @@ class Board:
         else:
             notification["message"] = "Maximum number of actions per turn reached"
         return notification
-

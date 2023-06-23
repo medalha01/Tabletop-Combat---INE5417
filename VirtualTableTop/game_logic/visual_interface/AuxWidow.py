@@ -5,10 +5,7 @@ from abc import ABC
 class AuxWindow(ABC):
     def __init__(self) -> None:
         super().__init__()
-        self.__values = None
         self.checkbox_value = None
-
-    def __init__(self):
         self.textbox_entries = {}
 
     def open_window(self):
@@ -71,17 +68,15 @@ class AuxWindow(ABC):
         )
         retrieve_button.pack(side="bottom", pady=10)
 
-    def retrieve_values(self, window):
+    def retrieve_values(self):
         # Retrieve the values from the textbox entries
         for label, entry in self.textbox_entries.items():
             value = entry.get()
             print(f"{label}: {value}")
-        
-        self.__values = self.textbox_entries
 
         # Close the window
-        window.destroy()
+        self.window.destroy()
         return self.textbox_entries
 
-    def notifyInvalidValue(self, mensagem):
+    def notify_invalid_value(self, mensagem):
         tk.messagebox.showinfo("Warning", mensagem)

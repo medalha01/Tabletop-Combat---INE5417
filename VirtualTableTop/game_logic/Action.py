@@ -15,22 +15,22 @@ class Action:
         self.max_amount : int
         self.times_used : int
 
-    def get_max_amount(self):
+    def get_max_amount(self) -> int:
         return self.max_amount
     
-    def get_times_used(self):
+    def get_times_used(self) -> int:
         return self.times_used
     
-    def get_range(self):
+    def get_range(self) -> float:
         return self.range
     
-    def get_aoe(self):
+    def get_aoe(self) -> int:
         return self.aoe_radius
     
-    def get_type(self):
+    def get_type(self) -> str:
         return self.type
     
-    def get_dict(self):
+    def get_dict(self) -> dict:
         action_dict = {}
         action_dict["name"] = self.name
         action_dict["type"] = self.type
@@ -67,4 +67,3 @@ class Action:
 
     def calculate_roll(self) -> int:
         return (randint(1,20) + self.roll_bonus)
-

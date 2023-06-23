@@ -6,9 +6,8 @@ class MatchState:
         self.characters : dict[str : dict] = {}
         self.initiative_queue : list[str] = []
         self.character : dict = {}
-        self.game_over : bool
     
-    def set_position(self, positions):
+    def set_positions(self, positions):
         for line in positions:
             aux = []
             for position in line:

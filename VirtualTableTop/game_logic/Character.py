@@ -36,7 +36,6 @@ class Character:
         self.actions_used = 0
         self.actions = {}
         for action in attributes["actions"]:
-            print(action)
             self.list_action(action)
 
     def set_position(self, position: tuple[int,int]):
@@ -46,25 +45,25 @@ class Character:
         self.actions[action["name"]] = Action()
         self.actions[action["name"]].set_attributes(action)
     
-    def get_pc(self):
+    def get_pc(self) -> bool:
         return self.pc
 
-    def get_action(self, action_name : str):
+    def get_action(self, action_name : str) -> Action:
         return self.actions[action_name]
     
-    def get_actions_used(self):
+    def get_actions_used(self) -> int:
         return self.actions_used
 
-    def get_action_amount(self):
+    def get_action_amount(self) -> int:
         return self.actions_amount
     
-    def get_moved_amount(self):
+    def get_moved_amount(self) -> float:
         return self.moved_amount
     
-    def get_position(self):
+    def get_position(self) -> tuple[int,int]:
         return self.position
 
-    def get_speed(self):
+    def get_speed(self) -> float:
         return self.speed
     
     def get_dict(self) -> dict:
@@ -107,7 +106,7 @@ class Character:
                 return True
         return False
 
-    def receive_heal(self, roll: int, heal_amount : int):
+    def receive_heal(self, heal_amount : int):
         self.hp += heal_amount
         if self.hp > self.hp_max:
             self.hp = self.hp_max
