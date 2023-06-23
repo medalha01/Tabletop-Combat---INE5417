@@ -31,8 +31,8 @@ class VirtualTableTopGUI(tk.Tk):
         self.image_file_name = file_name
 
     def update_view(self, match_status: int, match_state: MatchState):
-        # print(match_state.characters)
-        # print(match_state.positions)
+        print(match_state.characters)
+        print(match_state.positions)
 
         self.update_board(match_state.characters, match_state.positions)
 
@@ -149,7 +149,7 @@ class VirtualTableTopGUI(tk.Tk):
         )
         matchMenu.add_command(
             label="Configure Match",
-            command=lambda: self.open_settings_window,
+            command=lambda: self.interface.send_match_settings,
         )
 
         characterMenu.add_command(label="Make Character", command=self.open_char_creation)

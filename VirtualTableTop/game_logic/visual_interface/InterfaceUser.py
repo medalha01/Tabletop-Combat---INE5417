@@ -70,7 +70,7 @@ class InterfaceUser(PyNetgamesServerListener):
                 self.gui.notify_message(notification["message"])
     
     def action_click(self, action_name: str, act_pos: tuple[int,int]):
-        print(f"Action {action_name} being made in {act_pos}")
+        print(action_name, act_pos)
         my_turn = self.board.is_my_turn(self.local_characters)
         if my_turn:
             notification = self.board.use_action(action_name, act_pos)
@@ -79,7 +79,7 @@ class InterfaceUser(PyNetgamesServerListener):
                 self.update_view()
             else:
                 self.gui.notify_message(notification["message"])
-            self.check_game_over()
+        self.check_game_over()
     
     def skip_turn(self):
         my_turn = self.board.is_my_turn(self.local_characters)
@@ -104,7 +104,7 @@ class InterfaceUser(PyNetgamesServerListener):
         match_status = sum([self.settings, self.has_initiave])+1 if self.master else 3
         self.gui.update_view(match_status, match_state)
     
-    def make_character(self, char_info: dict):
+    def make_character(self, char_info):
         if not(self.start or self.has_player_char) and self.settings:
             print(f"creating char:\n{char_info}")
             if not self.master:
@@ -131,7 +131,7 @@ class InterfaceUser(PyNetgamesServerListener):
         }
         self.server_proxy.send_move(self.match_id, payload)
 
-    def send_match_settings(self, settings: dict):
+    def send_match_settings(self, settings):
         if self.master:
             self.board.update_position_matrix(settings["board_size"], settings["board_size"])
             self.gui.update_board_image(settings["filename"])
@@ -146,9 +146,9 @@ class InterfaceUser(PyNetgamesServerListener):
         else:
             messagebox.showinfo('Action not permitted', 'Only the master can configure the match', icon='warning')
 
-    def send_initiative(self):
+    def send_iniciative(self):
         amount_of_pcs = self.board.get_character_count() - len(self.local_characters)
-        # print(amount_of_pcs, (self.master and self.settings and (amount_of_pcs == self.number_of_players-1)))
+        print(amount_of_pcs, (self.master and self.settings and (amount_of_pcs == self.number_of_players-1)))
         if self.master and self.settings and (amount_of_pcs == self.number_of_players-1):
             self.set_start()
             payload = {
@@ -190,6 +190,9 @@ class InterfaceUser(PyNetgamesServerListener):
     def receive_connection_success(self):
         print("Connection Success")
         self.connected = True
+
+    def send_match(self, amount_of_players: int):
+        self.server_proxy.send_match(amount_of_players)
 
     def receive_disconnect(self):
         self.reset()
