@@ -1,5 +1,3 @@
-
-
 from VirtualTableTop.game_logic.visual_interface.AuxWidow import AuxWindow
 import tkinter as tk
 
@@ -89,7 +87,7 @@ class SettingWindow(AuxWindow):
                 )
             textbox_label.pack(side="left", padx=(0, 10))
             if label == "Background \nImage":
-                options = ["stone.jpg", "grass.jpg", "dirty.png", "sand.png", "wood.png"]
+                options = ["stone.jpg", "grass.jpg", "dirt.png", "sand.png", "wood.png"]
                 dropdown = tk.StringVar(label_frame)
                 dropdown.set("grass.jpg")
                 dropdown_menu = tk.OptionMenu(label_frame, dropdown, *options)
@@ -110,7 +108,7 @@ class SettingWindow(AuxWindow):
     def retrieve_values(self):
         try:
             settings = {"board_size" : int(self.textbox_entries["Size \nof board"].get()), 
-                        "filename": self.textbox_entries["Background \nImage"].get()}
+                        "filename": self.dropDownList[0].get()}
             self.interface.send_match_settings(settings)
             self.window.destroy()
         except Exception as exc:
