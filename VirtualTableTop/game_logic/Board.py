@@ -194,11 +194,11 @@ class Board:
         roll = action.calculate_roll()
         heal = action.calculate_effect()
 
-        self.receive_heal(roll, heal, action_name, affected_characters)
+        self.receive_heal(heal, action_name, affected_characters)
 
         payload = {
             "message_type" : "heal",
-            "content": [roll, heal, affected_characters]
+            "content": [ heal, affected_characters]
         }
         return payload
 
