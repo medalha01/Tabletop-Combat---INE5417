@@ -13,6 +13,36 @@ class StartMatchWindow(AuxWindow):
 
     def get_status_labels(self):
         return ["Number \nof Players", "Are you \nthe DM?"]
+    
+    def create_textboxes(self):
+        status = self.get_status_labels()
+        self.dropDownList = []
+        for i, label in enumerate(status):
+
+            label_frame = tk.Frame(self.window, bg="#3B3B3B", padx=5, pady=5)
+            label_frame.pack(side="top", fill="x", padx=10, expand=True)  # ???
+            textbox_label = tk.Label(
+            label_frame,
+            text=label,
+            font=("helvetica", 12),
+            bg="#3B3B3B",
+            fg="#e3e3e3",
+            width=10,
+            anchor="w"  # ancora no canto esquerdo
+                )
+            textbox_label.pack(side="left", padx=(0, 10))
+            if label == "Are you \nthe DM?":
+                options = ["Yes", "No"]
+                dropdown = tk.StringVar(label_frame)
+                dropdown.set('Yes')
+                dropdown_menu = tk.OptionMenu(label_frame, dropdown, *options)
+                dropdown_menu.pack(side="top", fill="x", padx=10, expand=True)
+                self.dropDownList.append(dropdown)
+            else:
+                textbox = tk.Entry(label_frame)
+                textbox.pack(side="right", expand=True, fill="x", padx=5)
+                self.textbox_entries[label] = textbox
+                self.window.configure(bg=textbox_label["bg"])
 
     def open_window(self):
         self.window = tk.Toplevel()
@@ -22,7 +52,11 @@ class StartMatchWindow(AuxWindow):
     
     def retrieve_values(self):
         try:
-            self.interface.start_match(bool(self.textbox_entries["Are you \nthe DM?"].get()), int(self.textbox_entries["Number \nof Players"].get()))
+            if (self.dropDownList[0].get() == 'Yes'):
+                isMaster = True
+            else:
+                isMaster = False
+            self.interface.start_match(isMaster, int(self.textbox_entries["Number \nof Players"].get()))
             self.window.destroy()
         except Exception as exc:
             self.notify_invalid_value(f"Invalid value: {exc}")
