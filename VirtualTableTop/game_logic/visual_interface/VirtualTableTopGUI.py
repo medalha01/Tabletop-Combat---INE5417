@@ -198,11 +198,11 @@ class VirtualTableTopGUI(tk.Tk):
         SW.open_window()
 
     def select_action(self, action_name='', widgted = None):
+        self._action_selected = action_name
         if action_name == '':
             print("Nenhuma acao selecionada")
             for action_widget in self._sidebar_char._action_list:
                 action_widget.configure(bg="#3B3B3B")
         else:
             widgted.configure(bg="#831A1A")
-            self._action_selected = action_name
             print(f"Acao {self._action_selected} selecionada")

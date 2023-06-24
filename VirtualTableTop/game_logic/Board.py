@@ -150,14 +150,14 @@ class Board:
         character.increase_actions_used()
         action = character.get_action(action_name)
         action.increase_times_used()
-
-        for name in affected_characters:
-            character = self.characters[name]
-            dead = character.receive_attack(roll, damage)
-            if dead:
-                pos = character.get_position()  
-                self.positions[pos[0]][pos[1]].set_position(None)
-                self.initiative_queue.remove(character)
+        if affected_characters:
+            for name in affected_characters:
+                character = self.characters[name]
+                dead = character.receive_attack(roll, damage)
+                if dead:
+                    pos = character.get_position()  
+                    self.positions[pos[0]][pos[1]].set_position(None)
+                    self.initiative_queue.remove(character)
         
         self.game_over = self.check_for_gameover()
 
@@ -167,9 +167,10 @@ class Board:
         action = character.get_action(action_name)
         action.increase_times_used()
 
-        for name in affected_characters:
-            character = self.characters[name]
-            character.receive_heal(heal_amount)
+        if affected_characters:
+            for name in affected_characters:
+                character = self.characters[name]
+                character.receive_heal(heal_amount)
 
     def make_attack(self, action_name: str, position: tuple[int,int]) -> dict:
         character = self.initiative_queue.top()
