@@ -7,7 +7,7 @@ class CharacterSidebar(Widget):
     def __init__(self, window) -> None:
         super().__init__(window)
         # Character Info
-        self._action_list = []
+        self.action_list = {}
         self._character_info = tk.Frame(self.frame, bg="#3B3B3B", width=300, padx=10, )
         self._character_info.pack(side="top")
 
@@ -47,16 +47,16 @@ class CharacterSidebar(Widget):
         self._action_sidebar.config(yscrollcommand=self._action_scrollbar.set)
 
     def update_action_list(self, actions: list[dict]):
-        for action in self._action_list:
+        for action in self.action_list.values():
             action.pack_forget()
-        self._action_list = []
+        self.action_list = {}
         for action in actions:
             text = f"{action['name']} {action['times_used']}/{action['max_amount']}\n{len(action['dices'])}d{action['dices'][0]}\nRoll:{action['roll_bonus']}\nEffect:{action['dmg_bonus']}\nRange:{action['range']}\nAoe:{action['aoe_radius']}"
             action_widget = tk.Label(self._action, text= text, font=("arial", 14), bg="#3B3B3B",
                                      fg="#e3e3e3",highlightcolor="#e3e3e3", highlightthickness=1)
-            action_widget.bind("<Button-1>", lambda event, action=action['name']: self.window.select_action(action, action_widget))
+            action_widget.bind("<Button-1>", lambda event, action=action['name']: self.window.select_action(action))
             action_widget.pack(anchor='nw', fill='x')
-            self._action_list.append(action_widget)
+            self.action_list[action['name']]= action_widget
 
     def update_char_info(self, character: dict):
         self._text_name.configure(text=character['name'])
