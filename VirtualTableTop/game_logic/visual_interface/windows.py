@@ -87,7 +87,7 @@ class SettingWindow(AuxWindow):
                 )
             textbox_label.pack(side="left", padx=(0, 10))
             if label == "Background \nImage":
-                options = ["stone.jpg", "grass.jpg", "dirt.png", "sand.png", "wood.png"]
+                options = ["stone.jpg", "grass.jpg", "dirt.jpg", "sand.jpg", "wood.jpg"]
                 dropdown = tk.StringVar(label_frame)
                 dropdown.set("grass.jpg")
                 dropdown_menu = tk.OptionMenu(label_frame, dropdown, *options)
