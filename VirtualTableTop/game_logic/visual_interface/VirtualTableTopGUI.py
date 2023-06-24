@@ -155,11 +155,11 @@ class VirtualTableTopGUI(tk.Tk):
         characterMenu.add_command(label="Make Character", command=self.open_char_creation)
         characterMenu.add_command(
             label="Save Character",
-            command=lambda: self.interface.save_character(''),
+            command=self.interface.save_character,
         )
         characterMenu.add_command(
             label="Load Character",
-            command=lambda: self.notify_message("Something went wrong!"),
+            command=self.interface.load_character,
         )
 
         # notifyMenu.add_command(
@@ -205,4 +205,3 @@ class VirtualTableTopGUI(tk.Tk):
             widgted.configure(bg="#831A1A")
             self._action_selected = action_name
             print(f"Acao {self._action_selected} selecionada")
-

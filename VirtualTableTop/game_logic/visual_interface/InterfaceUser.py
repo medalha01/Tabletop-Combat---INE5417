@@ -12,7 +12,7 @@ from py_netgames_client.tkinter_client.PyNetgamesServerListener import (
 from py_netgames_client.tkinter_client.PyNetgamesServerProxy import (
     PyNetgamesServerProxy,
 )
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import os
 
 
@@ -50,12 +50,16 @@ class InterfaceUser(PyNetgamesServerListener):
         self.has_initiave = True
 
     def save_character(self):
-
         for char in self.local_characters:
             filepath = '{}.json'.format(char.get_name())
-            with open(filepath) as json_file:
+            with open(filepath, 'w') as json_file:
                 json_file.write(json.dumps(char.get_dict()))
 
+    def load_character(self):
+        filepath = filedialog.askopenfilename()
+        with open(filepath) as json_file:
+                char_info = json.load(json_file)
+        self.make_character(char_info)
 
     def add_as_controllable_character(self, character):
         self.local_characters.append(character)
@@ -97,7 +101,7 @@ class InterfaceUser(PyNetgamesServerListener):
         if self.board.game_over:
             answer = messagebox.askquestion('Game Over', 'Do you want to save your character?', icon='warning')
             if answer == 'yes':
-                self.save_character('')
+                self.save_character()
             self.server_proxy.send_disconnect()
 
     def update_view(self):
@@ -147,7 +151,7 @@ class InterfaceUser(PyNetgamesServerListener):
         else:
             messagebox.showinfo('Action not permitted', 'Only the master can configure the match', icon='warning')
 
-    def send_iniciative(self):
+    def send_initiative(self):
         amount_of_pcs = self.board.get_character_count() - len(self.local_characters)
         print(amount_of_pcs, (self.master and self.settings and (amount_of_pcs == self.number_of_players-1)))
         if self.master and self.settings and (amount_of_pcs == self.number_of_players-1):
