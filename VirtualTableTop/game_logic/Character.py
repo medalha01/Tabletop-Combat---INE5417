@@ -110,7 +110,7 @@ class Character:
                 return True
         return False
 
-    def receive_heal(self, roll: int, heal_amount : int):
+    def receive_heal(self, heal_amount : int):
         self.hp += heal_amount
         if self.hp > self.hp_max:
             self.hp = self.hp_max
