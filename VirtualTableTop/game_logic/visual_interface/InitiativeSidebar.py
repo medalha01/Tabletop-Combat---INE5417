@@ -11,19 +11,18 @@ class InitiativeSidebar(Widget):
 
         self._initiave_text = tk.Label(
             self.frame,
-            text="Initiative",
+            text="        Initiative        ",
             bg="#3B3B3B",
             font=("helvetica", 30),
             fg="#e3e3e3",
-            padx=10,
-            wraplength=250,
+            padx=10
         )
         self._initiave_text.pack(side="top")
 
         self._character_listbox = tk.Listbox(
             self.frame,
             bg="#3B3B3B",
-            font=("helvetica", 16),
+            font=("helvetica", 12),
             fg="#e3e3e3",
             selectmode=tk.SINGLE,
             selectbackground="#e3e3e3",

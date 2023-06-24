@@ -230,7 +230,7 @@ class CreateAction(AuxWindow):
 
     def retrieve_values(self):
         try:
-            action = {"name": self.textbox_entries["Name"].get(), "type": self.dropDownList[0].get().lower(), 
+            action = {"name": self.textbox_entries["Name"].get()[:25], "type": self.dropDownList[0].get().lower(), 
                     "dices": list(map(int, self.textbox_entries["Dices"].get().split(','))), "roll_bonus": int(self.textbox_entries["Roll\nBonus"].get()), 
                     "dmg_bonus": int(self.textbox_entries["Effect\nBonus"].get()), "range": float(self.textbox_entries["Range"].get())+1, 
                     "aoe_radius": int(self.textbox_entries["Area of\nEffect"].get()), "max_amount": int(self.textbox_entries["Number of\nUses"].get())}

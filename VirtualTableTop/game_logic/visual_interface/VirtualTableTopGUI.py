@@ -44,8 +44,6 @@ class VirtualTableTopGUI(tk.Tk):
         self.update_context_button(match_status)
 
     def update_board(self, characters: dict[str : dict], postions: list[list[str]]):
-        if self.canvas:
-            self.canvas.pack_forget()
 
         self.grid_width = len(postions[0])
         self.grid_height = len(postions)
@@ -55,7 +53,7 @@ class VirtualTableTopGUI(tk.Tk):
         image = image.resize((self.tile_size, self.tile_size), Image.ANTIALIAS)
         background_image = ImageTk.PhotoImage(image)
         self.img = background_image
-        self.canvas = tk.Canvas(
+        canvas = tk.Canvas(
             self,
             bg="#3B3B3B", #width=800, height=600,
             scrollregion=(
@@ -65,7 +63,6 @@ class VirtualTableTopGUI(tk.Tk):
                 self.tile_size * self.grid_height + 20,
             ),
         )
-        self.canvas.pack(side="right", fill="both", expand=True)
 
         self.tiles = []
         for row in range(self.grid_height):
@@ -75,18 +72,22 @@ class VirtualTableTopGUI(tk.Tk):
                 y1 = row * self.tile_size
                 x2 = x1 + self.tile_size
                 y2 = y1 + self.tile_size
-                self.canvas.create_image(x1, y1, anchor="nw", image=self.img)
-                tile = self.canvas.create_rectangle(
+                canvas.create_image(x1, y1, anchor="nw", image=self.img)
+                tile = canvas.create_rectangle(
                     x1, y1, x2, y2, fill="", outline="black"
                 )
                 name = postions[row][col]
                 if name != '':
                     # color = f"#{random.randint(0, 0xFFFFFF):06x}"
                     color = characters[name]["color"]
-                    self.canvas.itemconfig(tile, fill=color)
+                    canvas.itemconfig(tile, fill=color)
 
                 tile_row.append(tile)
             self.tiles.append(tile_row)         
+        if self.canvas:
+            self.canvas.pack_forget()
+        self.canvas = canvas
+        self.canvas.pack(side="right", fill="both", expand=True)
         self.canvas.bind("<Button-1>", self.on_canvas_click)
 
         self._y_canvas_scrollbar = tk.Scrollbar(self.canvas)
