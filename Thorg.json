@@ -1,1 +1,0 @@
-{"pc": true, "name": "Thorg", "color": "Red", "position": [5, 5], "level": "5", "hp_max": 55, "initiative": 2, "ca": 17, "speed": 7.5, "hp": 55, "actions_amount": 1, "moved_amount": 0, "actions_used": 0, "actions": [{"name": "Machado", "type": "attack", "dices": [12], "roll_bonus": 7, "dmg_bonus": 4, "range": 2.0, "aoe_radius": 0, "max_amount": 0, "times_used": 0}]}
