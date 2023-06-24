@@ -170,9 +170,39 @@ class CreateAction(AuxWindow):
         self.create_textboxes()
         self.create_retrieve_button()
     
+    def create_textboxes(self):
+        status = self.get_status_labels()
+        self.dropDownList = []
+        for i, label in enumerate(status):
+
+            label_frame = tk.Frame(self.window, bg="#3B3B3B", padx=5, pady=5)
+            label_frame.pack(side="top", fill="x", padx=10, expand=True)  # ???
+            textbox_label = tk.Label(
+            label_frame,
+            text=label,
+            font=("helvetica", 12),
+            bg="#3B3B3B",
+            fg="#e3e3e3",
+            width=10,
+            anchor="w"  # ancora no canto esquerdo
+                )
+            textbox_label.pack(side="left", padx=(0, 10))
+            if label == "Type":
+                options = ["Attack", "Heal"]
+                dropdown = tk.StringVar(label_frame)
+                dropdown.set("Attack")
+                dropdown_menu = tk.OptionMenu(label_frame, dropdown, *options)
+                dropdown_menu.pack(side="top", fill="x", padx=10, expand=True)
+                self.dropDownList.append(dropdown)
+            else:
+                textbox = tk.Entry(label_frame)
+                textbox.pack(side="right", expand=True, fill="x", padx=5)
+                self.textbox_entries[label] = textbox
+                self.window.configure(bg=textbox_label["bg"])
+
     def retrieve_values(self):
         try:
-            action = {"name": self.textbox_entries["Name"].get(), "type": self.textbox_entries["Type"].get(), 
+            action = {"name": self.textbox_entries["Name"].get(), "type": self.dropDownList[0].get().lower(), 
                     "dices": list(map(int, self.textbox_entries["Dices"].get().split(','))), "roll_bonus": int(self.textbox_entries["Roll\nBonus"].get()), 
                     "dmg_bonus": int(self.textbox_entries["Effect\nBonus"].get()), "range": float(self.textbox_entries["Range"].get())+1, 
                     "aoe_radius": int(self.textbox_entries["Area of\nEffect"].get()), "max_amount": int(self.textbox_entries["Number of\nUses"].get())}
